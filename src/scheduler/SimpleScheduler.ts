@@ -1,16 +1,16 @@
-import { Task } from "./../Task";
+import { TaskInterface } from "./../task/TaskInterface";
 
 export class SimpleScheduler {
     constructor() {
     }
 
-    getTasks(): Array<Task> {
+    getTasks(): Array<TaskInterface> {
         return [];
     }
 
-    addTask(task: Task) {
-        let t: Task = task;
+    addTask(task: TaskInterface) {
+        let t: TaskInterface = task;
     }
 }
 
-new SimpleScheduler().addTask({timestamp: 1, id: "abc"});
+//new SimpleScheduler().addTask({timestamp: 1, id: "abc"});
