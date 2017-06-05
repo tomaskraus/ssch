@@ -8,7 +8,7 @@ console.log(SimpleSchedulerRequire);
 describe('Scheduler', function () {
     describe('#getTasks()', function () {
         it('should return empty array for an empty scheduler', function () {
-            let sch = new SimpleSchedulerRequire.SimpleScheduler();
+            var sch = new SimpleSchedulerRequire.SimpleScheduler();
             assert.deepEqual(sch.getTasks(), []);
         });
     });

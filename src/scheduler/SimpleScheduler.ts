@@ -1,4 +1,4 @@
-import { TaskInterface } from "./../task/TaskInterface";
+import { TaskInterface } from "./../task/Task";
 
 export class SimpleScheduler {
     constructor() {
