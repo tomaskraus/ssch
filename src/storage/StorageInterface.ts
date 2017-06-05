@@ -1,4 +1,4 @@
-import { TaskInterface } from "./../task/TaskInterface";
+import {TaskInterface, TaskInfoInterface, TaskType, TaskState} from "./../task/Task";
 
 //export const MIN_TIMESTAMP: number = 0;
 //export const MAX_TIMESTAMP: number = Number.MAX_VALUE;
@@ -10,14 +10,7 @@ import { TaskInterface } from "./../task/TaskInterface";
  * @interface StorageInterface
  */
 export interface StorageInterface {
-    /**
-     *
-     *
-     * @returns {Array<TaskInterface>} all tasks in the storage
-     *
-     * @memberof StorageInterface
-     */
-    getAllTasks() : Array<TaskInterface>;
+
 
     /**
      *
@@ -31,10 +24,13 @@ export interface StorageInterface {
      */
     getTaskById(taskId: string) : TaskInterface;
 
+
     /**
+     * Adds a new task to the storage.
      *
-     *
-     * @param {TaskInterface} task task to add
+     * @param {TaskType} taskType type of a task
+     * @param {number} timeExecute when to execute this task
+     * @param {*} data task custom data
      * @returns {string} id of the newly added task
      *
      * @memberof StorageInterface
@@ -42,9 +38,22 @@ export interface StorageInterface {
     addTask(task: TaskInterface) : string;
 
     /**
+     * Updates task in the storage.
      *
+     * @param {string} taskId id of a task to update
+     * @param {TaskInterface} task task that will replace the original one
+     * @returns {StorageInterface} self
      *
-     * @param {string} taskId
+     * @throws error if no task with that id is found
+     *
+     * @memberof StorageInterface
+     */
+    updateTask(taskId: string, task: TaskInterface) : StorageInterface;
+
+    /**
+     * deletes a task from the storage.
+     *
+     * @param {string} taskId id of a task to delete
      * @returns {StorageInterface} self
      *
      * @throws error if no task with that id is found
@@ -56,11 +65,11 @@ export interface StorageInterface {
     /**
      *
      *
-     * @param {number} minTimestamp
-     * @param {number} [maxTimestamp]
-     * @returns {Array<string>} task ids with execution timestamps >= minTimeStamp and < maxTimestamp
+     * @param {number} minExecutionTimestamp timestamp
+     * @param {number} [maxExecutionTimestamp] timestamp
+     * @returns {Array<string>} task ids with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp
      *
      * @memberof StorageInterface
      */
-    getTaskIdsByTimeExecuteRange(minTimestamp: number, maxTimestamp?: number) : Array<string>;
+    getTaskIdsByTimeExecuteRange(minExecutionTimestamp: number, maxExecutionTimestamp?: number) : Array<string>;
 }
