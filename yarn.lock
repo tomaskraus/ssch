@@ -2,6 +2,18 @@
 # yarn lockfile v1
 
 
+"@types/chai@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.0.tgz#4c9adabd2d04265769e6d9e847e86cc404dc7dcd"
+
+"@types/mocha@^2.2.41":
+  version "2.2.41"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.41.tgz#e27cf0817153eb9f2713b2d3f6c68f1e1c3ca608"
+
+assertion-error@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/assertion-error/-/assertion-error-1.0.2.tgz#13ca515d86206da0bac66e834dd397d87581094c"
+
 balanced-match@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
@@ -16,6 +28,21 @@ brace-expansion@^1.1.7:
 browser-stdout@1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/browser-stdout/-/browser-stdout-1.3.0.tgz#f351d32969d32fa5d7a5567154263d928ae3bd1f"
+
+chai@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-4.0.2.tgz#2f7327c4de6f385dd7787999e2ab02697a32b83b"
+  dependencies:
+    assertion-error "^1.0.1"
+    check-error "^1.0.1"
+    deep-eql "^2.0.1"
+    get-func-name "^2.0.0"
+    pathval "^1.0.0"
+    type-detect "^4.0.0"
+
+check-error@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
 
 commander@2.9.0:
   version "2.9.0"
@@ -33,6 +60,12 @@ debug@2.6.0:
   dependencies:
     ms "0.7.2"
 
+deep-eql@^2.0.1:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-2.0.2.tgz#b1bac06e56f0a76777686d50c9feb75c2ed7679a"
+  dependencies:
+    type-detect "^3.0.0"
+
 diff@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.2.0.tgz#c9ce393a4b7cbd0b058a725c93df299027868ff9"
@@ -44,6 +77,10 @@ escape-string-regexp@1.0.5:
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
+
+get-func-name@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/get-func-name/-/get-func-name-2.0.0.tgz#ead774abee72e20409433a066366023dd6887a41"
 
 glob@7.1.1:
   version "7.1.1"
@@ -76,8 +113,8 @@ inflight@^1.0.4:
     wrappy "1"
 
 inherits@2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.1.tgz#b17d08d326b4423e568eff719f91b0b1cbdf69f1"
 
 json3@3.3.2:
   version "3.3.2"
@@ -162,6 +199,10 @@ mocha@^3.4.2:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
+moment@^2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
+
 ms@0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
@@ -176,11 +217,23 @@ path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
 
+pathval@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
+
 supports-color@3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.1.2.tgz#72a262894d9d408b956ca05ff37b2ed8a6e2a2d5"
   dependencies:
     has-flag "^1.0.0"
+
+type-detect@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-3.0.0.tgz#46d0cc8553abb7b13a352b0d6dea2fd58f2d9b55"
+
+type-detect@^4.0.0:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.3.tgz#0e3f2670b44099b0b46c284d136a7ef49c74c2ea"
 
 wrappy@1:
   version "1.0.2"
