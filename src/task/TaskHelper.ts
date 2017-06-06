@@ -25,7 +25,7 @@ export class TaskHelper {
         return task;
     }
 
-    static setExecuteTime(task: Task.TaskInterface, executionTimestamp: number): Task.TaskInterface {
+    static setExecutionTimestamp(task: Task.TaskInterface, executionTimestamp: number): Task.TaskInterface {
         task.executionTimestamp = executionTimestamp;
         return task;
     }
