@@ -81,4 +81,40 @@ describe('Storage', function () {
         });
     });
 
+
+    describe('#getTaskIdsByExecutionTimestamp()', function() {
+        it("should throw error if minExecTimestamp == maxExecTimestamp", function () {
+            assert.throw(() => { stor.getTaskIdsByExecutionTimestamp(2, 2) }, "illegal value");
+        });
+        it("should throw error if minExecTimestamp > maxExecTimestamp", function () {
+            assert.throw(() => { stor.getTaskIdsByExecutionTimestamp(3, 2) }, "illegal value");
+        });
+
+        it("should return an empty array if times are out of range", function() {
+            let taskId1 = stor.addTask(task1);
+            let taskId2 = stor.addTask(task2);
+            assert.deepEqual(stor.getTaskIdsByExecutionTimestamp(0, 1), []);
+        });
+
+        it("should return exactly one id for one-point matching timestamp interval", function() {
+            let taskId1: string = stor.addTask(task1);
+            let taskId2: string = stor.addTask(task2);
+            assert.deepEqual(stor.getTaskIdsByExecutionTimestamp(10, 11), [taskId1]);
+        });
+
+        it("should return all matching ids for a huge timestamp interval", function() {
+            let taskId1 = stor.addTask(task1);
+            let taskId2 = stor.addTask(task2);
+            assert.deepEqual(stor.getTaskIdsByExecutionTimestamp(0, 1000), [taskId1, taskId2]);
+        });
+
+        it("should add time intervals correctly", function() {
+            let taskId1 = stor.addTask(task1);
+            let taskId2 = stor.addTask(task2);
+            assert.deepEqual(
+                stor.getTaskIdsByExecutionTimestamp(0, 10).concat(stor.getTaskIdsByExecutionTimestamp(10, 20)),
+                stor.getTaskIdsByExecutionTimestamp(0, 20)
+            );
+        });
+    });
 });
