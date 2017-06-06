@@ -9,8 +9,6 @@ let stor: StorageRequire.SimpleStorage;
 let task1, task2: TaskInterface;
 let nonExistentId = "nonExistentId";
 
-//console.log(StorageRequire);
-
 
 let cloneData = function (input) {
     return JSON.parse(JSON.stringify(input));
@@ -39,7 +37,6 @@ describe('Storage', function () {
     describe('#addTask()', function () {
         it('should add two different tasks', function () {
             let taskId = stor.addTask(task1);
-            //console.log(`taskId=${taskId}`);
             assert.deepEqual(stor.getTaskById(taskId), task1);
             let taskId2 = stor.addTask(task2);
             assert.deepEqual(stor.getTaskById(taskId2), task2);
