@@ -9,7 +9,7 @@ let stor: StorageRequire.SimpleStorage;
 let task1, task2: TaskInterface;
 let nonExistentId = "nonExistentId";
 
-console.log(StorageRequire);
+//console.log(StorageRequire);
 
 
 let cloneData = function (input) {
@@ -27,11 +27,12 @@ describe('Storage', function () {
 
     describe('#getTaskById', function () {
         it('should throw Error for Id search in an empty storage', function () {
-            assert.throw(() => {stor.getTaskById(nonExistentId)}, "not found");
+            assert.throw(() => { stor.getTaskById(nonExistentId) }, "not found");
         });
 
-        it('should throw Error for Id search in an empty storage', function () {
-            assert.throw(() => {stor.getTaskById(nonExistentId)}, "not found");
+        it('should throw Error for an unknown Id', function () {
+            let taskId = stor.addTask(task1);
+            assert.throw(() => { stor.getTaskById(nonExistentId) }, "not found");
         });
     });
 
@@ -54,32 +55,32 @@ describe('Storage', function () {
 
             let customData = { item: "123" };
             let task1m = cloneData(task1);
-            task1m.data = customData;
+            TaskHelper.setData(task1m, customData);
 
             stor.updateTask(task1Id, task1m);
             assert.deepEqual(stor.getTaskById(task1Id).data, customData);
         });
 
-        it('should throw Error for nonexistent Id to update', function() {
+        it('should throw Error for nonexistent Id to update', function () {
             let taskId1 = stor.addTask(task1);
-            assert.throw(() => {stor.getTaskById(nonExistentId)}, "not found");
+            assert.throw(() => { stor.getTaskById(nonExistentId) }, "not found");
         });
     });
 
 
     describe('#deleteTask()', function () {
-        it('deletes a task', function() {
+        it('deletes a task', function () {
             let taskId1 = stor.addTask(task1);
             assert.deepEqual(stor.getTaskById(taskId1), task1);
 
             stor.deleteTask(taskId1);
             //no such id is present after deletion
-            assert.throw(() => {stor.deleteTask(taskId1)}, "not found");
+            assert.throw(() => { stor.deleteTask(taskId1) }, "not found");
         });
 
-        it('should throw Error for nonexistent Id to delete', function() {
+        it('should throw Error for nonexistent Id to delete', function () {
             let taskId1 = stor.addTask(task1);
-            assert.throw(() => {stor.deleteTask(nonExistentId)}, "not found");
+            assert.throw(() => { stor.deleteTask(nonExistentId) }, "not found");
         });
     });
 
