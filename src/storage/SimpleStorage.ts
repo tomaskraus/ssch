@@ -41,7 +41,7 @@ export class SimpleStorage implements StorageInterface {
     }
 
 
-    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[] {
+    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[] {
         assert.isBelow(minExecutionTimestamp, maxExecutionTimestamp, "illegal value");
 
         let ids = [];

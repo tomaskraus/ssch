@@ -70,29 +70,29 @@ describe('Storage', function () {
 
     describe('#getTaskIdsByExecutionTimestamp()', function() {
         it("should throw error if minExecTimestamp == maxExecTimestamp", function () {
-            assert.throw(() => { sf.storage.getTaskIdsByExecutionTimestamp(2, 2) }, "illegal value");
+            assert.throw(() => { sf.storage.getTaskPairsByExecutionTimestamp(2, 2) }, "illegal value");
         });
         it("should throw error if minExecTimestamp > maxExecTimestamp", function () {
-            assert.throw(() => { sf.storage.getTaskIdsByExecutionTimestamp(3, 2) }, "illegal value");
+            assert.throw(() => { sf.storage.getTaskPairsByExecutionTimestamp(3, 2) }, "illegal value");
         });
 
         it("should return an empty array if times are out of range", function() {
-            assert.deepEqual(sf.storage.getTaskIdsByExecutionTimestamp(0, 1), []);
+            assert.deepEqual(sf.storage.getTaskPairsByExecutionTimestamp(0, 1), []);
         });
 
         it("should return exactly one id for one-point matching timestamp interval", function() {
-            assert.deepEqual(sf.storage.getTaskIdsByExecutionTimestamp(10, 11), [[sf.task1.executionTimestamp, sf.taskId1]]);
+            assert.deepEqual(sf.storage.getTaskPairsByExecutionTimestamp(10, 11), [[sf.task1.executionTimestamp, sf.taskId1]]);
         });
 
         it("should return all matching ids for a huge timestamp interval", function() {
-            assert.deepEqual(sf.storage.getTaskIdsByExecutionTimestamp(0, 1000),
+            assert.deepEqual(sf.storage.getTaskPairsByExecutionTimestamp(0, 1000),
             [[sf.task1.executionTimestamp, sf.taskId1], [sf.task2.executionTimestamp, sf.taskId2]]);
         });
 
         it("should add time intervals correctly", function() {
             assert.deepEqual(
-                sf.storage.getTaskIdsByExecutionTimestamp(0, 10).concat(sf.storage.getTaskIdsByExecutionTimestamp(10, 20)),
-                sf.storage.getTaskIdsByExecutionTimestamp(0, 20)
+                sf.storage.getTaskPairsByExecutionTimestamp(0, 10).concat(sf.storage.getTaskPairsByExecutionTimestamp(10, 20)),
+                sf.storage.getTaskPairsByExecutionTimestamp(0, 20)
             );
         });
     });

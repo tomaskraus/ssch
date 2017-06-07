@@ -81,5 +81,5 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[];
+    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[];
 }

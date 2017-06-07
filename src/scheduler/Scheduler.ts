@@ -15,8 +15,8 @@ export class Scheduler {
     }
 
 
-    getFutureTaskIds(timestamp): taskPairType[] {
-        return this.storage.getTaskIdsByExecutionTimestamp(timestamp, timestamp + this.timeFuturePeriod);
+    getFutureTaskPairs(timestamp): taskPairType[] {
+        return this.storage.getTaskPairsByExecutionTimestamp(timestamp, timestamp + this.timeFuturePeriod);
     }
 
 

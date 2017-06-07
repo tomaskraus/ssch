@@ -16,27 +16,27 @@ describe('Scheduler', function () {
 
     describe('#getFutureTaskIds()', function () {
         it('should return empty taskPair array on early start time and too short future', function () {
-            assert.deepEqual(schf.shortScheduler.getFutureTaskIds(0), []);
+            assert.deepEqual(schf.shortScheduler.getFutureTaskPairs(0), []);
         });
 
         it('should return one taskPair on a sufficient start time and short future', function () {
-            assert.deepEqual(schf.shortScheduler.getFutureTaskIds(1), [[10, sf.taskId1]]);
+            assert.deepEqual(schf.shortScheduler.getFutureTaskPairs(1), [[10, sf.taskId1]]);
         });
 
         it('should return one taskPair on on the edge start time', function () {
-            assert.deepEqual(schf.shortScheduler.getFutureTaskIds(10), [[10, sf.taskId1]]);
+            assert.deepEqual(schf.shortScheduler.getFutureTaskPairs(10), [[10, sf.taskId1]]);
         });
 
         it('should return other taskPair on a sufficient start time and short future', function () {
-            assert.deepEqual(schf.shortScheduler.getFutureTaskIds(11), [[20, sf.taskId2]]);
+            assert.deepEqual(schf.shortScheduler.getFutureTaskPairs(11), [[20, sf.taskId2]]);
         });
 
         it('should return more taskPairs on a sufficient start time and long future', function () {
-            assert.deepEqual(schf.longScheduler.getFutureTaskIds(0), [[10, sf.taskId1], [20, sf.taskId2]]);
+            assert.deepEqual(schf.longScheduler.getFutureTaskPairs(0), [[10, sf.taskId1], [20, sf.taskId2]]);
         });
 
         it('should return empty taskPair array on start time at the far future', function () {
-            assert.deepEqual(schf.shortScheduler.getFutureTaskIds(30), []);
+            assert.deepEqual(schf.shortScheduler.getFutureTaskPairs(30), []);
         });
     });
 });
