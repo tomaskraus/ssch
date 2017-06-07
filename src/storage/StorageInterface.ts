@@ -4,6 +4,14 @@ import {TaskInterface, TaskInfoInterface, TaskType, TaskState} from "./../task/T
 //export const MAX_TIMESTAMP: number = Number.MAX_VALUE;
 
 /**
+ * task tuple [execTimestamp, id]
+ * where:
+ *   <li> execTimeStamp is execution time of a task
+ *   <li> id is task id in the store
+ */
+export type taskPairType = [number, string];
+
+/**
  * Storage of tasks
  *
  * @export
@@ -73,5 +81,5 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : Array<[number, string]>;
+    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[];
 }

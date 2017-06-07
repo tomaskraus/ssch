@@ -1,4 +1,4 @@
-import { StorageInterface } from "./StorageInterface";
+import { StorageInterface, taskPairType } from "./StorageInterface";
 import * as Task from "./../task/Task";
 import { assert } from "chai";
 
@@ -41,7 +41,7 @@ export class SimpleStorage implements StorageInterface {
     }
 
 
-    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : Array<[number, string]> {
+    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[] {
         assert.isBelow(minExecutionTimestamp, maxExecutionTimestamp, "illegal value");
 
         let ids = [];
