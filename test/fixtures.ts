@@ -3,6 +3,8 @@ import { SimpleStorage } from '../src/storage/SimpleStorage';
 import { TaskHelper } from '../src/task/TaskHelper';
 import { TaskInterface } from '../src/task/Task';
 
+import { Scheduler } from "../src/scheduler/Scheduler";
+
 
 let getStorage = function (): StorageInterface {
     return new SimpleStorage();
@@ -32,5 +34,18 @@ class StorageFixture {
 }
 
 
-export { StorageFixture };
+class SchedulerFixture {
+    stor: StorageInterface;
+    shortScheduler: Scheduler;
+    longScheduler: Scheduler;
+
+    constructor(sf: StorageFixture) {
+        this.stor = sf.storage;
+        this.shortScheduler = new Scheduler(this.stor, 10);
+        this.longScheduler = new Scheduler(this.stor, 100);
+    }
+
+}
+
+export { StorageFixture, SchedulerFixture };
 
