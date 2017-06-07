@@ -67,11 +67,11 @@ export interface StorageInterface {
      *
      * @param {number} minExecutionTimestamp timestamp
      * @param {number} maxExecutionTimestamp timestamp
-     * @returns {Array<string>} task ids with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp
+     * @returns {Array<[number, string]>} tuples [execTimestamp, id] with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp
      *
      * @throws error if minExecutionTimestamp >= maxExecutionTimestamp
      *
      * @memberof StorageInterface
      */
-    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : Array<string>;
+    getTaskIdsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : Array<[number, string]>;
 }
