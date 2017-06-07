@@ -1,11 +1,11 @@
 import 'mocha';
 import { assert } from "chai";
 
-import * as StorageRequire from '../src/storage/SimpleStorage';
+import { SimpleStorage } from '../src/storage/SimpleStorage';
 import { TaskHelper } from '../src/task/TaskHelper';
 import { TaskInterface } from '../src/task/Task';
 
-let stor: StorageRequire.SimpleStorage;
+let stor: SimpleStorage;
 let task1, task2: TaskInterface;
 let nonExistentId = "nonExistentId";
 
@@ -17,7 +17,7 @@ let cloneData = function (input) {
 
 describe('Storage', function () {
     beforeEach(function () {
-        stor = new StorageRequire.SimpleStorage();
+        stor = new SimpleStorage();
         task1 = TaskHelper.create("testTask", {}, 10, 0);
         task2 = TaskHelper.create("testTask", {}, 20, 0);
 
