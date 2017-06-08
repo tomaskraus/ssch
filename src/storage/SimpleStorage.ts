@@ -15,10 +15,11 @@ export class SimpleStorage implements StorageInterface {
     }
 
     getTaskById(taskId: string): Task.TaskInterface {
-        if (this.tasks.has(taskId)) {
-            return this.tasks.get(taskId);
+        let task = this.tasks.get(taskId);
+        if (task == null) {
+            throw new Error(`task with id [${taskId}] not found`);
         }
-        throw new Error(`task with id [${taskId}] not found`);
+        return task;
     }
 
     addTask(task: Task.TaskInterface): string {
@@ -41,10 +42,10 @@ export class SimpleStorage implements StorageInterface {
     }
 
 
-    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[] {
+    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): taskPairType[] {
         assert.isBelow(minExecutionTimestamp, maxExecutionTimestamp, "illegal value");
 
-        let ids = [];
+        let ids: taskPairType[] = [];
         for (var item of this.tasks.entries()) {
             if (item[1].executionTimestamp >= minExecutionTimestamp
                 && item[1].executionTimestamp < maxExecutionTimestamp) {

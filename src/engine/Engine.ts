@@ -11,12 +11,12 @@ export class Engine {
     readonly storage: StorageInterface;
     readonly scheduler: Scheduler;
 
-    private runnerId?: number;
+    private runnerId: number|null;
 
 
-    constructor(loopInterval: number) {
+    constructor(storage: StorageInterface, loopInterval: number) {
         this.loopInterval = loopInterval;
-        this.storage = new SimpleStorage();
+        this.storage = storage;
         this.scheduler = new Scheduler(this.storage, loopInterval);
         this.runnerId = null;
 
@@ -36,7 +36,7 @@ export class Engine {
             if (Math.abs(timeDeviation) > MAX_TIME_ERROR) {
                 throw new Error(`time deviation too high [${timeDeviation}]`);
             }
-            console.log(`  dev: ${timeDeviation}`);
+            //console.log(`  dev: ${timeDeviation}`);
 
             syntheticTime += this.loopInterval;
             this.loop(syntheticTime)
@@ -53,6 +53,6 @@ export class Engine {
 
     loop(syntheticTimestamp) {
         console.log(`${syntheticTimestamp}: engine...`);
-        //this.scheduler.doLoop(syntheticTimestamp);
+        this.scheduler.doLoop(syntheticTimestamp);
     }
 }
