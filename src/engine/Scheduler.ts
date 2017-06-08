@@ -22,11 +22,12 @@ export class Scheduler {
 
 
     doLoop(timestamp: number) {
-        let scheduledTasks = this.getFutureTaskPairs(timestamp);
+        let scheduledTaskPairs = this.getFutureTaskPairs(timestamp);
 
-        for (let tsk of scheduledTasks) {
+        for (let tsk of scheduledTaskPairs) {
             let timeToWait = tsk[0] - timestamp;
-            setTimeout(this.processTaskPair(tsk), timeToWait);
+            //console.log(`timetoWait set to [${timeToWait}] for task id [tsk[1]]`);
+            setTimeout(() => {this.processTaskPair(tsk);}, timeToWait * 1000);
         }
     }
 
@@ -34,6 +35,7 @@ export class Scheduler {
     processTaskPair(taskPair: taskPairType): void {
         try {
             let task: TaskInterface = this.storage.getTaskById(taskPair[1]);
+            console.log(`[${taskPair[0]}] processing task id [${taskPair[1]}] taskType [${task.taskType}]`);
             taskDispatcher.dispatch(task);
 
         } catch (err) {
