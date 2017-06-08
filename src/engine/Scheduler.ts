@@ -4,8 +4,6 @@ import { taskDispatcher } from "./TaskDispatcher";
 
 export class Scheduler {
 
-    private scheduledTasks: taskPairType[];
-
     storage: StorageInterface;
     timeFuturePeriod: number; //how long (in seconds) to see to the future when looking for tasks
 
@@ -26,7 +24,7 @@ export class Scheduler {
     doLoop(timestamp: number) {
         let scheduledTasks = this.getFutureTaskPairs(timestamp);
 
-        for (let tsk of this.scheduledTasks) {
+        for (let tsk of scheduledTasks) {
             let timeToWait = tsk[0] - timestamp;
             setTimeout(this.processTaskPair(tsk), timeToWait);
         }
