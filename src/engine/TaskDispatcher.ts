@@ -1,5 +1,8 @@
 import { TaskInterface } from "../task/Task";
 
+import Debug from 'debug';
+const debug = Debug('ssch:TaskDispatcher');
+
 class TaskDispatcher {
 
     dispatch(task: TaskInterface) {
@@ -24,5 +27,5 @@ export { taskDispatcher };
 //--------------------------------------------------------------------------------
 
 let deleteTask = function(task: TaskInterface) {
-    console.log("task deleteTask called, data " + JSON.stringify(task.data));
+    debug("task deleteTask called, data: %j", task.data);
 }

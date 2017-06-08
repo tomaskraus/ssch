@@ -3,6 +3,10 @@ import { SimpleStorage } from "../storage/SimpleStorage";
 import { Scheduler } from "./Scheduler";
 import * as moment from "moment";
 
+import Debug from 'debug';
+const debug = Debug('ssch:Engine');
+
+
 let MAX_TIME_ERROR = 250; //in millis
 let LOOP_CORRECTION = 0;
 
@@ -19,7 +23,7 @@ export class Engine {
         this.storage = storage;
         this.scheduler = new Scheduler(this.storage, loopInterval);
         this.runnerId = null;
-
+        debug('CREATED. loopInterval: [%d]', loopInterval);
     }
 
     run(initialTimestamp: number) {
@@ -29,6 +33,7 @@ export class Engine {
         let totalLoopTime = 0;
         let timeDeviation = 0;
 
+        debug("call engine START");
         //1st time
         this.loop(syntheticTime);
 
@@ -48,6 +53,7 @@ export class Engine {
 
     stop() {
         if (this.runnerId !== null) {
+            debug("call engine STOP");
             clearInterval(this.runnerId);
         }
         //else throw new Error("null runner!");
@@ -55,7 +61,7 @@ export class Engine {
 
 
     loop(syntheticTimestamp) {
-        console.log(`${syntheticTimestamp}: .`);
+        debug("%d:", syntheticTimestamp);
         this.scheduler.doLoop(syntheticTimestamp);
     }
 }

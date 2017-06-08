@@ -2,6 +2,9 @@ import { TaskInterface } from "../task/Task";
 import { StorageInterface, taskPairType } from "../storage/StorageInterface";
 import { taskDispatcher } from "./TaskDispatcher";
 
+import Debug from 'debug';
+const debug = Debug('ssch:Scheduler');
+
 export class Scheduler {
 
     storage: StorageInterface;
@@ -13,6 +16,7 @@ export class Scheduler {
     constructor(storage: StorageInterface, timeFuturePeriod: number) {
         this.storage = storage;
         this.timeFuturePeriod = timeFuturePeriod;
+        debug("CREATED");
     }
 
 
@@ -35,7 +39,7 @@ export class Scheduler {
     processTaskPair(taskPair: taskPairType): void {
         try {
             let task: TaskInterface = this.storage.getTaskById(taskPair[1]);
-            console.log(`[${taskPair[0]}] processing task id [${taskPair[1]}] taskType [${task.taskType}]`);
+            debug("processing task id [%s] taskType [%s]", taskPair[1], task.taskType);
             taskDispatcher.dispatch(task);
 
         } catch (err) {

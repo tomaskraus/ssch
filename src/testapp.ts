@@ -4,6 +4,9 @@ import { Engine } from "./engine/Engine";
 import * as moment from "moment";
 import { TaskHelper } from "./task/TaskHelper";
 
+import Debug from 'debug';
+const debug = Debug('ssch:testApp');
+
 let engineLoopInterval = 3; //in seconds
 let totalRunningTime = 60; //in seconds
 
@@ -22,7 +25,7 @@ let eng = new Engine(stor, engineLoopInterval);
 eng.run(0);
 
 setTimeout(() => {
-    console.log("stopping engine");
+    debug("stopping engine");
     eng.stop();
 }, totalRunningTime * 1000);
 

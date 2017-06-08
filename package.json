@@ -16,6 +16,7 @@
     "test": "node node_modules/mocha/bin/mocha ./build/test"
   },
   "dependencies": {
+    "debug": "^2.6.8",
     "moment": "^2.18.1"
   }
 }
