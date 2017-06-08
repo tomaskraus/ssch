@@ -23,6 +23,6 @@ export { taskDispatcher };
 
 //--------------------------------------------------------------------------------
 
-let deleteTask = function(task) {
-    console.log("task deleteTask called");
+let deleteTask = function(task: TaskInterface) {
+    console.log("task deleteTask called, data " + JSON.stringify(task.data));
 }
