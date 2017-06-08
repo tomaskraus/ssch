@@ -1,10 +1,11 @@
 
 import { Engine } from "./engine/Engine";
 
-let totalRunningTime = 5; //in seconds
+let engineLoopInterval = 2; //in seconds
+let totalRunningTime = 60; //in seconds
 
+let eng = new Engine(engineLoopInterval);
 
-let eng = new Engine(2);
 
 eng.run(0);
 
