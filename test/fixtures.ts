@@ -3,7 +3,7 @@ import { SimpleStorage } from '../src/storage/SimpleStorage';
 import { TaskHelper } from '../src/task/TaskHelper';
 import { TaskInterface } from '../src/task/Task';
 
-import { Scheduler } from "../src/scheduler/Scheduler";
+import { Scheduler } from "../src/engine/Scheduler";
 
 
 let getStorage = function (): StorageInterface {
