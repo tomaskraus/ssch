@@ -29,6 +29,9 @@ export class Engine {
         let totalLoopTime = 0;
         let timeDeviation = 0;
 
+        //1st time
+        this.loop(syntheticTime);
+
         this.runnerId = setInterval(() => {
             totalLoopTime += this.loopInterval;
             let currentMillis = moment().valueOf();
@@ -39,7 +42,7 @@ export class Engine {
             //console.log(`  dev: ${timeDeviation}`);
 
             syntheticTime += this.loopInterval;
-            this.loop(syntheticTime)
+            this.loop(syntheticTime);
         }, this.loopInterval  * 1000 + LOOP_CORRECTION);
     }
 
@@ -52,7 +55,7 @@ export class Engine {
 
 
     loop(syntheticTimestamp) {
-        console.log(`${syntheticTimestamp}: engine...`);
+        console.log(`${syntheticTimestamp}: .`);
         this.scheduler.doLoop(syntheticTimestamp);
     }
 }
