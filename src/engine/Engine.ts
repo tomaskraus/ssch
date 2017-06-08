@@ -1,7 +1,8 @@
 import { StorageInterface } from "../storage/StorageInterface";
 import { SimpleStorage } from "../storage/SimpleStorage";
 import { Scheduler } from "./Scheduler";
-//import { StorageInterface } from "../storage/StorageInterface";
+import * as moment from "moment";
+
 
 export class Engine {
     readonly loopInterval: number; //in seconds
@@ -10,6 +11,9 @@ export class Engine {
 
     private runnerId?: number;
 
+    private currentTimestamp: number;
+
+
     constructor(loopInterval: number) {
         this.loopInterval = loopInterval;
         this.storage = new SimpleStorage();
@@ -17,7 +21,11 @@ export class Engine {
     }
 
     run(initialTimestamp: number) {
-        let timestamp: number = initialTimestamp;
+        this.currentTimestamp = initialTimestamp;
+
+        let realTimeOffset: number = moment().unix();
+        console.log(`realtime: ${realTimeOffset}`);
+
         this.runnerId = setInterval(() => {
             console.log("engine...");
             //this.scheduler.doLoop(timestamp)
@@ -29,4 +37,5 @@ export class Engine {
             clearInterval(this.runnerId);
         }
     }
+
 }
