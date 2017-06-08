@@ -41,10 +41,8 @@ export class Scheduler {
             let task: TaskInterface = this.storage.getTaskById(taskPair[1]);
             debug("processing task id [%s] taskType [%s]", taskPair[1], task.taskType);
             taskDispatcher.dispatch(task);
-
         } catch (err) {
-            //TODO log
-            throw (err);
+            debug(err);
         }
     }
 
