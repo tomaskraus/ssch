@@ -5,7 +5,9 @@ import * as moment from "moment";
 import { TaskHelper } from "./task/TaskHelper";
 
 import Debug from 'debug';
-const debug = Debug('ssch:testApp');
+const debug = Debug('ssch:testapp');
+
+debug("start testapp");
 
 let engineLoopInterval = 3; //in seconds
 let totalRunningTime = 60; //in seconds
