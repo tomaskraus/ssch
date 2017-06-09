@@ -53,6 +53,7 @@ export class Engine {
         if (this.timer != null) {
             this.timer.stop();
         }
+        this.scheduler.cancelTasks();
     }
 
 

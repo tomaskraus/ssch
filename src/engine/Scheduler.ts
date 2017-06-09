@@ -11,11 +11,14 @@ export class Scheduler {
     timeFuturePeriod: number; //how long (in seconds) to see to the future when looking for tasks
 
     taskIdsToExecute: taskPairType[];
-
+    private wantToCancelTasks: boolean;
+    private plannedTaskIds: number[];
 
     constructor(storage: StorageInterface, timeFuturePeriod: number) {
         this.storage = storage;
         this.timeFuturePeriod = timeFuturePeriod;
+        this.wantToCancelTasks = false;
+        this.plannedTaskIds = [];
         debug("CREATED");
     }
 
@@ -30,8 +33,20 @@ export class Scheduler {
 
         for (let tsk of scheduledTaskPairs) {
             let timeToWait = tsk[0] - timestamp;
-            //console.log(`timetoWait set to [${timeToWait}] for task id [tsk[1]]`);
-            setTimeout(() => {this.processTaskPair(tsk);}, timeToWait * 1000);
+            if (!this.wantToCancelTasks) {
+                this.plannedTaskIds.push(
+                    setTimeout(() => {this.processTaskPair(tsk);}, timeToWait * 1000)
+                );
+            } else break;
+        }
+    }
+
+
+    cancelTasks() {
+        debug("cancelTasks CALLED");
+        this.wantToCancelTasks = true;
+        for (let taskId of this.plannedTaskIds) {
+            clearTimeout(taskId);
         }
     }
 
