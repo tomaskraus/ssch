@@ -6,62 +6,54 @@ import * as moment from "moment";
 import Debug from 'debug';
 const debug = Debug('ssch:Engine');
 
+import { RealTimer } from "./RealTimer";
 
-let MAX_TIME_ERROR = 250; //in millis
-let LOOP_CORRECTION = 0;
+let MAX_TIME_ERROR = 75; //in millis
 
 export class Engine {
-    readonly loopInterval: number; //in seconds
+    readonly loopPeriod: number; //in seconds
+    readonly loopPeriodMillis: number; //in milliseconds
     readonly storage: StorageInterface;
     readonly scheduler: Scheduler;
 
-    private runnerId: number|null;
+    private timer: RealTimer | null;
 
-
-    constructor(storage: StorageInterface, loopInterval: number) {
-        this.loopInterval = loopInterval;
+    /**
+     * Creates an instance of Engine.
+     * @param {StorageInterface} storage
+     * @param {number} loopPeriod (in seconds)
+     *
+     * @memberof Engine
+     */
+    constructor(storage: StorageInterface, loopPeriod: number) {
         this.storage = storage;
-        this.scheduler = new Scheduler(this.storage, loopInterval);
-        this.runnerId = null;
-        debug('CREATED. loopInterval: [%d]', loopInterval);
+        this.loopPeriod = loopPeriod;
+
+        this.loopPeriodMillis = loopPeriod * 1000;
+        this.scheduler = new Scheduler(this.storage, loopPeriod);
+        this.timer = null;
+        debug('CREATED. loopInterval: [%d]', loopPeriod);
     }
 
     run(initialTimestamp: number) {
-        let syntheticTime = initialTimestamp;
-
-        let initialTimeMillis = moment().valueOf(); //in millis
-        let totalLoopTime = 0;
-        let timeDeviation = 0;
+        let syntheticTimestamp = initialTimestamp;
 
         debug("call engine START");
         //1st time
-        this.loop(syntheticTime);
+        this.scheduler.doLoop(syntheticTimestamp);
 
-        this.runnerId = setInterval(() => {
-            totalLoopTime += this.loopInterval;
-            let currentMillis = moment().valueOf();
-            timeDeviation = (currentMillis - initialTimeMillis) - (1000 * totalLoopTime);
-            if (Math.abs(timeDeviation) > MAX_TIME_ERROR) {
-                throw new Error(`time deviation too high [${timeDeviation}]`);
-            }
-            //console.log(`  dev: ${timeDeviation}`);
-
-            syntheticTime += this.loopInterval;
-            this.loop(syntheticTime);
-        }, this.loopInterval  * 1000 + LOOP_CORRECTION);
+        this.timer = new RealTimer(this.loopPeriodMillis, MAX_TIME_ERROR);
+        this.timer.run(() => {
+            syntheticTimestamp += this.loopPeriod;
+            this.scheduler.doLoop(syntheticTimestamp);
+        });
     }
 
     stop() {
-        if (this.runnerId !== null) {
-            debug("call engine STOP");
-            clearInterval(this.runnerId);
+        if (this.timer != null) {
+            this.timer.stop();
         }
-        //else throw new Error("null runner!");
     }
 
 
-    loop(syntheticTimestamp) {
-        debug("%d:", syntheticTimestamp);
-        this.scheduler.doLoop(syntheticTimestamp);
-    }
 }
