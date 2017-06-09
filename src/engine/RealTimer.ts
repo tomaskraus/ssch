@@ -40,23 +40,25 @@ export class RealTimer {
         this.runInternal(handler, this.interval);
     }
 
-    private runInternal (handler: () => void, timeout: number): any {
-        this.runnerId = setTimeout(() => {
-            handler();
-            let timeElapsed = moment().valueOf() - this.initialTimeMillis;
-            this.syntheticTimeoutSum += this.interval;
-            let timeDeviation = timeElapsed - this.syntheticTimeoutSum;
-            debug(" te: %d [%d]", timeElapsed, timeDeviation);
+    private runInternal (handler: () => void, timeout: number) {
+        if (!this.wantStop) {
+            this.runnerId = setTimeout(() => {
+                let timeElapsed = moment().valueOf() - this.initialTimeMillis;
+                this.syntheticTimeoutSum += this.interval;
+                let timeDeviation = timeElapsed - this.syntheticTimeoutSum;
+                debug(" te: %d [%d]", timeElapsed, timeDeviation);
 
-            //deviation acceptance check
-            if (Math.abs(timeDeviation) > this.maxTimeDeviationAllowed) {
-                throw new Error(`time deviation too high [${timeDeviation}], max absolute allowed [${this.maxTimeDeviationAllowed}]`);
-            }
+                //deviation acceptance check
+                if (Math.abs(timeDeviation) > this.maxTimeDeviationAllowed) {
+                    throw new Error(`time deviation too high [${timeDeviation}], max absolute allowed [${this.maxTimeDeviationAllowed}]`);
+                }
 
-            if (!this.wantStop) {
-                this.runnerId = this.runInternal(handler, timeout - (timeDeviation));
-            }
-        }, timeout);
+                if (!this.wantStop) {
+                    this.runInternal(handler, timeout - (timeDeviation));
+                    handler();
+                }
+            }, timeout);
+        }
 
     }
 
