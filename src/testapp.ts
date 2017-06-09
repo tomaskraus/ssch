@@ -11,6 +11,7 @@ let engineLoopInterval = 3; //in seconds
 let totalRunningTime = 60; //in seconds
 
 let stor = new SimpleStorage();
+stor.addTask(TaskHelper.create("deleteTask", {a: "1st"}, 1, 0));
 stor.addTask(TaskHelper.create("deleteTask", {}, 10, 0));
 stor.addTask(TaskHelper.create("deleteTask", {a: 1}, 11, 0));
 stor.addTask(TaskHelper.create("deleteTask", {}, 14, 0));
@@ -21,12 +22,14 @@ stor.addTask(TaskHelper.create("deleteTask", {}, 53, 0));
 let eng = new Engine(stor, engineLoopInterval);
 
 
-// eng.run(moment().unix());
+let startTime = moment().unix();
 eng.run(0);
 
 setTimeout(() => {
     debug("stopping engine");
     eng.stop();
+    let totalTime = moment().unix() - startTime;
+    debug("it tooks [%d] second(s)", totalTime);
 }, totalRunningTime * 1000);
 
 
