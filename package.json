@@ -18,6 +18,7 @@
   "dependencies": {
     "debug": "^2.6.8",
     "moment": "^2.18.1",
-    "real-scheduler": "^0.0.x"
+    "real-scheduler": "^0.0.x",
+    "request": "^2.81.0"
   }
 }
