@@ -34,7 +34,7 @@ export { taskDispatcher };
 
 //--------------------------------------------------------------------------------
 
-let deleteTask0 = function(task: TaskInterface, done: any, err: any) {
+let deleteTask = function(task: TaskInterface, done: any, err: any) {
     debug("task deleteTask called, data: %j", task.data);
     done();
 }
