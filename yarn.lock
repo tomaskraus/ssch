@@ -231,6 +231,12 @@ pathval@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
 
+real-scheduler@^0.0.x:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/real-scheduler/-/real-scheduler-0.0.3.tgz#77c14a821555c99e9b235ddd7868694e794a4d13"
+  dependencies:
+    debug "^2.6.8"
+
 supports-color@3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.1.2.tgz#72a262894d9d408b956ca05ff37b2ed8a6e2a2d5"
