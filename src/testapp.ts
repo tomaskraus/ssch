@@ -18,6 +18,7 @@ stor.addTask(TaskHelper.create("deleteTask", {}, 10, 0));
 stor.addTask(TaskHelper.create("deleteTask", {a: 1}, 11, 0));
 stor.addTask(TaskHelper.create("deleteTask", {}, 14, 0));
 stor.addTask(TaskHelper.create("testTask", {}, 20, 0));
+stor.addTask(TaskHelper.create("deleteTask", {}, 20, 0));
 stor.addTask(TaskHelper.create("deleteTask", {file: "abc.txt"}, 25, 0));
 stor.addTask(TaskHelper.create("deleteTask", {}, 53, 0));
 
