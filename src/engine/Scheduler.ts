@@ -55,7 +55,7 @@ export class Scheduler {
         try {
             let task: TaskInterface = this.storage.getTaskById(taskPair.taskId);
             debug("processing task id [%s] taskType [%s]", taskPair.taskId, task.taskType);
-            taskDispatcher.dispatch(task, this.doneHandler, this.errHandler);
+            taskDispatcher.dispatch(taskPair.taskId, task, this.errHandler, this.createDoneHandler(taskPair.taskId));
         } catch (err) {
             debug(err);
         }
@@ -65,8 +65,10 @@ export class Scheduler {
         debug("error occured: %o", errObj);
     }
 
-    doneHandler() {
-        debug("task done");
+    createDoneHandler(taskId: string) {
+        return function() {
+            debug(`task id [${taskId}] done`);
+        }
     }
 
 }
