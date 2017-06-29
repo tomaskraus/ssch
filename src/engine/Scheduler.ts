@@ -56,22 +56,15 @@ export class Scheduler {
         try {
             let task: TaskInterface = this.storage.getTaskById(taskPair.taskId);
             debug("processing task id [%s] taskType [%s]", taskPair.taskId, task.taskType);
-            taskDispatcher.dispatch(taskPair.taskId, task, this.createErrorHandler(taskPair.taskId), this.createDoneHandler(taskPair.taskId));
+            taskDispatcher.dispatch(taskPair.taskId, task).then((result) => {
+                debug(`task id [${taskPair.taskId}] done`);
+            })
+            .catch((errObj) => {
+                debugError(`task id [${taskPair.taskId}] error: %o`, errObj);
+            });
         } catch (err) {
             debugError("!! following error was not received in err object, was caught in an exception instead !!");
             debugError(err);
-        }
-    }
-
-    createErrorHandler(taskId: string) {
-        return function(errObj) {
-            debugError(`task id [${taskId}] error: %o`, errObj);
-        }
-    }
-
-    createDoneHandler(taskId: string) {
-        return function() {
-            debug(`task id [${taskId}] done`);
         }
     }
 
