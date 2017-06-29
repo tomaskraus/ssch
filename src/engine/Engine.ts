@@ -35,6 +35,7 @@ export class Engine {
     run(initialTimestamp: number) {
         debug("call engine START");
         this.realTimer = new RealTimer((sch) => {
+             debug("-");
              this.scheduler.doLoop(initialTimestamp + sch.getSyntheticTimeElapsed()/1000)
             },
             this.loopPeriod * 1000, {
