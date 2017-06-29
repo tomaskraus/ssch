@@ -19,7 +19,7 @@ export class Scheduler {
         this.timeFuturePeriod = timeFuturePeriod;
         this.wantToCancelTasks = false;
         this.plannedTaskIds = [];
-        debug("CREATED");
+        debug("CREATED. timeFuturePeriod: [%d]", this.timeFuturePeriod);
     }
 
 
@@ -32,7 +32,7 @@ export class Scheduler {
         let scheduledTaskPairs = this.getFutureTaskPairs(timestamp);
 
         for (let tsk of scheduledTaskPairs) {
-            let timeToWait = tsk[0] - timestamp;
+            let timeToWait = tsk.execTimestamp - timestamp;
             if (!this.wantToCancelTasks) {
                 this.plannedTaskIds.push(
                     setTimeout(() => {this.processTaskPair(tsk);}, timeToWait * 1000)
