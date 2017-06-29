@@ -53,8 +53,8 @@ export class Scheduler {
 
     processTaskPair(taskPair: taskPairType): void {
         try {
-            let task: TaskInterface = this.storage.getTaskById(taskPair[1]);
-            debug("processing task id [%s] taskType [%s]", taskPair[1], task.taskType);
+            let task: TaskInterface = this.storage.getTaskById(taskPair.taskId);
+            debug("processing task id [%s] taskType [%s]", taskPair.taskId, task.taskType);
             taskDispatcher.dispatch(task, this.doneHandler, this.errHandler);
         } catch (err) {
             debug(err);
