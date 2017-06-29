@@ -2,8 +2,7 @@ import { TaskInterface } from "../task/Task";
 
 import Debug from 'debug';
 
-// import Request from 'request';
-var request = require('request');
+import * as rp from 'request-promise-native';
 
 const debug = Debug('ssch:TaskDispatcher');
 
@@ -56,20 +55,14 @@ let longTask0 = function(taskId: string, task: TaskInterface, err: ErrorHandlerT
 let longTask = function(taskId: string, task: TaskInterface, err: ErrorHandlerType, done: DoneHandlerType) {
     debug("task long called, data: %j", task.data);
 
-    request({ url: 'http://localhost:8080/github2/longservice/', json: true, timeout: 10000 }, function (error, response, body) {
-        // console.log('error:', error); // Print the error if one occurred
-        // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        // console.log('body:', body); // Print the HTML for the Google homepage.
-
-        //err("vse v haji...");
-
-        if (error) {
-            err(error);
-        } else {
+    rp({ url: 'http://localhost:8080/github2/longservice/', json: true, timeout: 10000 })
+        .then((body) => {
             debug("task long id [%s] completed: %d", taskId, body && body.val);
             done();
-        }
-    });
+        })
+        .catch((error) => {
+            err(error);
+        });
 
 
 }
