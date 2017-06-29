@@ -4,6 +4,7 @@ import { taskDispatcher } from "./TaskDispatcher";
 
 import Debug from 'debug';
 const debug = Debug('ssch:Scheduler');
+const debugError = Debug('ssch:Scheduler:Error');
 
 export class Scheduler {
 
@@ -55,14 +56,17 @@ export class Scheduler {
         try {
             let task: TaskInterface = this.storage.getTaskById(taskPair.taskId);
             debug("processing task id [%s] taskType [%s]", taskPair.taskId, task.taskType);
-            taskDispatcher.dispatch(taskPair.taskId, task, this.errHandler, this.createDoneHandler(taskPair.taskId));
+            taskDispatcher.dispatch(taskPair.taskId, task, this.createErrorHandler(taskPair.taskId), this.createDoneHandler(taskPair.taskId));
         } catch (err) {
-            debug(err);
+            debugError("!! following error was not received in err object, was caught in an exception instead !!");
+            debugError(err);
         }
     }
 
-    errHandler(errObj) {
-        debug("error occured: %o", errObj);
+    createErrorHandler(taskId: string) {
+        return function(errObj) {
+            debugError(`task id [${taskId}] error: %o`, errObj);
+        }
     }
 
     createDoneHandler(taskId: string) {
