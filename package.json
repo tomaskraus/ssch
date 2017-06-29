@@ -7,7 +7,7 @@
   "author": "Tomas Kraus",
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^4.0.0",
+    "@types/chai": "^4.0.1",
     "@types/mocha": "^2.2.41",
     "chai": "^4.0.2",
     "mocha": "^3.4.2"
@@ -18,7 +18,7 @@
   "dependencies": {
     "debug": "^2.6.8",
     "moment": "^2.18.1",
-    "real-scheduler": "^0.0.x",
+    "real-scheduler": "^0.0.7",
     "request": "^2.81.0"
   }
 }

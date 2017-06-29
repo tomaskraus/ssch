@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@types/chai@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.0.tgz#4c9adabd2d04265769e6d9e847e86cc404dc7dcd"
+"@types/chai@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.1.tgz#37fea779617cfec3fd2b19a0247e8bbdd5133bf6"
 
 "@types/mocha@^2.2.41":
   version "2.2.41"
@@ -433,9 +433,9 @@ qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
 
-real-scheduler@^0.0.x:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/real-scheduler/-/real-scheduler-0.0.3.tgz#77c14a821555c99e9b235ddd7868694e794a4d13"
+real-scheduler@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/real-scheduler/-/real-scheduler-0.0.7.tgz#11bac39fa292411c92af16b43d88fe68bfbbad8b"
   dependencies:
     debug "^2.6.8"
 
