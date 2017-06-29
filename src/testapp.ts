@@ -20,7 +20,8 @@ stor.addTask(TaskHelper.create("deleteTask", {}, 14, 0));
 stor.addTask(TaskHelper.create("testTask", {}, 20, 0));
 stor.addTask(TaskHelper.create("deleteTask", {}, 20, 0));
 stor.addTask(TaskHelper.create("longTask", {}, 21, 0));
-stor.addTask(TaskHelper.create("longTask", {}, 22, 0));
+stor.addTask(TaskHelper.create("longTask", {t:23}, 23, 0));
+stor.addTask(TaskHelper.create("longTask", {}, 28, 0));
 stor.addTask(TaskHelper.create("deleteTask", {file: "abc.txt"}, 25, 0));
 stor.addTask(TaskHelper.create("deleteTask", {}, 53, 0));
 
