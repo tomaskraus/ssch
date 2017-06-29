@@ -1,4 +1,4 @@
-import {TaskInterface, TaskInfoInterface, TaskType, TaskState} from "./../task/Task";
+import { TaskInterface, TaskInfoInterface, TaskType, TaskState } from "./../task/Task";
 
 //export const MIN_TIMESTAMP: number = 0;
 //export const MAX_TIMESTAMP: number = Number.MAX_VALUE;
@@ -9,7 +9,7 @@ import {TaskInterface, TaskInfoInterface, TaskType, TaskState} from "./../task/T
  *   <li> execTimeStamp is execution time of a task
  *   <li> id is task id in the store
  */
-export type taskPairType = [number, string];
+export type taskPairType = { execTimestamp: number, taskId: string };
 
 /**
  * Storage of tasks
@@ -30,7 +30,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    getTaskById(taskId: string) : TaskInterface;
+    getTaskById(taskId: string): TaskInterface;
 
 
     /**
@@ -43,7 +43,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    addTask(task: TaskInterface) : string;
+    addTask(task: TaskInterface): string;
 
     /**
      * Updates task in the storage.
@@ -56,7 +56,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    updateTask(taskId: string, task: TaskInterface) : StorageInterface;
+    updateTask(taskId: string, task: TaskInterface): StorageInterface;
 
     /**
      * deletes a task from the storage.
@@ -68,7 +68,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    deleteTask(taskId: string) : StorageInterface;
+    deleteTask(taskId: string): StorageInterface;
 
     /**
      *
@@ -81,5 +81,5 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number) : taskPairType[];
+    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): taskPairType[];
 }

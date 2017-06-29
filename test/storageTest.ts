@@ -81,12 +81,12 @@ describe('Storage', function () {
         });
 
         it("should return exactly one id for one-point matching timestamp interval", function() {
-            assert.deepEqual(sf.storage.getTaskPairsByExecutionTimestamp(10, 11), [[sf.task1.executionTimestamp, sf.taskId1]]);
+            assert.deepEqual(sf.storage.getTaskPairsByExecutionTimestamp(10, 11), [{execTimestamp: sf.task1.executionTimestamp, taskId: sf.taskId1}]);
         });
 
         it("should return all matching ids for a huge timestamp interval", function() {
             assert.deepEqual(sf.storage.getTaskPairsByExecutionTimestamp(0, 1000),
-            [[sf.task1.executionTimestamp, sf.taskId1], [sf.task2.executionTimestamp, sf.taskId2]]);
+            [{execTimestamp: sf.task1.executionTimestamp, taskId: sf.taskId1}, {execTimestamp: sf.task2.executionTimestamp, taskId: sf.taskId2}]);
         });
 
         it("should add time intervals correctly", function() {
