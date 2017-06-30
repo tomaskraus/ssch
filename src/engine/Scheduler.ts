@@ -24,7 +24,7 @@ export class Scheduler {
     }
 
 
-    protected getFutureTaskPairs(timestamp: number): Promise<taskPairType[]> {
+    getFutureTaskPairs(timestamp: number): Promise<taskPairType[]> {
         return this.storage.getTaskPairsByExecutionTimestamp(timestamp, timestamp + this.timeFuturePeriod);
     }
 
