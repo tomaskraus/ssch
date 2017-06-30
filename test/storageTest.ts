@@ -14,7 +14,7 @@ let cloneData = function (input) {
 
 describe('Storage', function () {
     beforeEach(function () {
-        sf = new StorageFixture;
+        sf = new StorageFixture();
     });
 
     describe('#getTaskById', function () {
