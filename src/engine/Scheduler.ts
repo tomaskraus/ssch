@@ -8,10 +8,10 @@ const debugError = Debug('ssch:Scheduler:Error');
 
 export class Scheduler {
 
-    storage: StorageInterface;
-    timeFuturePeriod: number; //how long (in seconds) to see to the future when looking for tasks
+    private storage: StorageInterface;
+    private timeFuturePeriod: number; //how long (in seconds) to see to the future when looking for tasks
 
-    taskIdsToExecute: taskPairType[];
+    private taskIdsToExecute: taskPairType[];
     private wantToCancelTasks: boolean;
     private plannedTaskIds: number[];
 
@@ -24,22 +24,23 @@ export class Scheduler {
     }
 
 
-    getFutureTaskPairs(timestamp: number): taskPairType[] {
+    protected getFutureTaskPairs(timestamp: number): Promise<taskPairType[]> {
         return this.storage.getTaskPairsByExecutionTimestamp(timestamp, timestamp + this.timeFuturePeriod);
     }
 
 
     doLoop(timestamp: number) {
-        let scheduledTaskPairs = this.getFutureTaskPairs(timestamp);
-
-        for (let tsk of scheduledTaskPairs) {
-            let timeToWait = tsk.execTimestamp - timestamp;
-            if (!this.wantToCancelTasks) {
-                this.plannedTaskIds.push(
-                    setTimeout(() => {this.processTaskPair(tsk);}, timeToWait * 1000)
-                );
-            } else break;
-        }
+        this.getFutureTaskPairs(timestamp)
+        .then(scheduledTaskPairs => {
+            for (let tsk of scheduledTaskPairs) {
+                let timeToWait = tsk.execTimestamp - timestamp;
+                if (!this.wantToCancelTasks) {
+                    this.plannedTaskIds.push(
+                        setTimeout(() => {this.processTaskPair(tsk);}, timeToWait * 1000)
+                    );
+                } else break;
+            }
+        })
     }
 
 
@@ -52,26 +53,22 @@ export class Scheduler {
     }
 
 
-    processTaskPair(taskPair: taskPairType): void {
+    protected processTaskPair(taskPair: taskPairType): void {
         try {
-            let task: TaskInterface = this.storage.getTaskById(taskPair.taskId);
-            debug("processing task id [%s] taskType [%s]", taskPair.taskId, task.taskType);
-            taskDispatcher.dispatch(taskPair.taskId, task, this.createErrorHandler(taskPair.taskId), this.createDoneHandler(taskPair.taskId));
+            let taskP: Promise<TaskInterface> = this.storage.getTaskById(taskPair.taskId);
+            taskP.then((task) => {
+                debug("processing task id [%s] taskType [%s]", taskPair.taskId, task.taskType);
+                return taskDispatcher.dispatch(taskPair.taskId, task);
+            })
+            .then((result) => {
+                debug(`task id [${taskPair.taskId}] done`);
+            })
+            .catch((errObj) => {
+                debugError(`task id [${taskPair.taskId}] error: %o`, errObj);
+            });
         } catch (err) {
             debugError("!! following error was not received in err object, was caught in an exception instead !!");
             debugError(err);
-        }
-    }
-
-    createErrorHandler(taskId: string) {
-        return function(errObj) {
-            debugError(`task id [${taskId}] error: %o`, errObj);
-        }
-    }
-
-    createDoneHandler(taskId: string) {
-        return function() {
-            debug(`task id [${taskId}] done`);
         }
     }
 
