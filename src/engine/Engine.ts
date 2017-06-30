@@ -1,7 +1,6 @@
 import { StorageInterface } from "../storage/StorageInterface";
 import { SimpleStorage } from "../storage/SimpleStorage";
 import { Scheduler } from "./Scheduler";
-import * as moment from "moment";
 
 import Debug from 'debug';
 const debug = Debug('ssch:Engine');

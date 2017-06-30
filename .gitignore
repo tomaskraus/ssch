@@ -1,5 +1,6 @@
 # node.js
 node_modules/
 
-# build - generated files
-build
+# js files
+*.js
+

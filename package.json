@@ -1,8 +1,12 @@
 {
   "name": "ssch",
   "version": "0.0.1",
-  "description": "stateful http scheduler",
-  "main": "index.js",
+  "description": "stateful task scheduler, written in typescript",
+  "keywords": [
+    "scheduler", "task", "typescript"
+  ],
+  "main": "dist/index.ts",
+  "types": "dist/index.d.ts",
   "repository": "https://github.com/tomaskraus/ssch",
   "author": "Tomas Kraus",
   "license": "MIT",

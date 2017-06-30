@@ -4,7 +4,11 @@
         "target": "es6",
         "module": "commonjs",
         "sourceMap": true,
-        "outDir": "build",
+        "outDir": "dist",
+        "declaration": true,
         "watch": true
-    }
+    },
+    "include": [
+        "src/**/*"
+    ]
 }
