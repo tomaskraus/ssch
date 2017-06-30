@@ -8,7 +8,7 @@ const debug = Debug('ssch:TaskDispatcher');
 
 
 
-class TaskDispatcher {
+export class TaskDispatcher {
 
     /**
      *
