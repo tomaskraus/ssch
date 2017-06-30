@@ -27,8 +27,8 @@ class StorageFixture {
 
         this.task1 = TaskHelper.create("testTask", {}, 10, 0);
         this.task2 = TaskHelper.create("testTask", {}, 20, 0);
-        this.taskId1 = this.storage.addTask(this.task1);
-        this.taskId2 = this.storage.addTask(this.task2);
+        this.storage.addTask(this.task1).then(id => {this.taskId1 = id});
+        this.storage.addTask(this.task2).then(id => {this.taskId2 = id});
         this.nonExistentId = "nonExistentId";
     }
 }

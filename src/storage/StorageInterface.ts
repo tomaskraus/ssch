@@ -24,62 +24,57 @@ export interface StorageInterface {
      *
      *
      * @param {string} taskId id of a task to search
-     * @returns {TaskInterface} task with an id given
-     *
-     * @throws error if no task with that id is found
+     * @returns {Promise<TaskInterface>} resolves with a task with an id given, rejects with an Error
      *
      * @memberof StorageInterface
      */
-    getTaskById(taskId: string): TaskInterface;
+    getTaskById(taskId: string): Promise<TaskInterface>;
 
 
     /**
      * Adds a new task to the storage.
      *
-     * @param {TaskType} taskType type of a task
-     * @param {number} timeExecute when to execute this task
-     * @param {*} data task custom data
-     * @returns {string} id of the newly added task
+     * @param {TaskInterface} task a task to add
+     * @returns {Promise<string>} resolves with an id of the newly added task, rejects with an Error
      *
      * @memberof StorageInterface
      */
-    addTask(task: TaskInterface): string;
+    addTask(task: TaskInterface): Promise<string>;
 
     /**
      * Updates task in the storage.
      *
      * @param {string} taskId id of a task to update
      * @param {TaskInterface} task task that will replace the original one
-     * @returns {StorageInterface} self
+     * @returns {Promise<StorageInterface>} resolves with a self, rejects with an Error
      *
      * @throws error if no task with that id is found
      *
      * @memberof StorageInterface
      */
-    updateTask(taskId: string, task: TaskInterface): StorageInterface;
+    updateTask(taskId: string, task: TaskInterface): Promise<StorageInterface>;
 
     /**
      * deletes a task from the storage.
      *
      * @param {string} taskId id of a task to delete
-     * @returns {StorageInterface} self
+     * @returns {Promise<StorageInterface>} resolves with a self, rejects with an Error
      *
      * @throws error if no task with that id is found
      *
      * @memberof StorageInterface
      */
-    deleteTask(taskId: string): StorageInterface;
+    deleteTask(taskId: string): Promise<StorageInterface>;
 
     /**
      *
      *
      * @param {number} minExecutionTimestamp timestamp
      * @param {number} maxExecutionTimestamp timestamp
-     * @returns {Array<[number, string]>} tuples [execTimestamp, id] with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp
+     * @returns {Promise<taskPairType[]>} resolves with taskPairs with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp, rejects with an Error
      *
-     * @throws error if minExecutionTimestamp >= maxExecutionTimestamp
      *
      * @memberof StorageInterface
      */
-    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): taskPairType[];
+    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]>;
 }
