@@ -13,8 +13,8 @@ export class SimpleStorage implements StorageInterface {
     }
 
     getTaskById(taskId: string): Promise<Task.TaskInterface> {
-        let task = this.tasks.get(taskId);
         return new Promise((resolve, reject) => {
+            let task = this.tasks.get(taskId);
             if (task == null) {
                 reject(new Error(`task with id [${taskId}] not found`));
             } else {
@@ -24,10 +24,9 @@ export class SimpleStorage implements StorageInterface {
     }
 
     addTask(task: Task.TaskInterface): Promise<string> {
-        let id = (this.idCounter++).toString();
-
-        this.tasks.set(id, task);
         return new Promise((resolve, reject) => {
+            let id = (this.idCounter++).toString();
+            this.tasks.set(id, task);
             resolve(id);
             // if(false) {
             //     reject(new Error("false"));
