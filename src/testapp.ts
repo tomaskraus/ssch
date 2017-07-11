@@ -12,7 +12,7 @@ debug("start testapp");
 let engineLoopInterval = 3; //in seconds
 let totalRunningTime = 20; //in seconds
 
-let stor = new SimpleStorage();
+let stor = new SimpleStorage('storageName');
 stor.addTask(TaskHelper.create("deleteTask", {a: "1st"}, 1, 0));
 stor.addTask(TaskHelper.create("deleteTask", {}, 10, 0));
 stor.addTask(TaskHelper.create("deleteTask", {a: 1}, 11, 0));
