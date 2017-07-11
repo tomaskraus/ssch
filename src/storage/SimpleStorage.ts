@@ -6,12 +6,10 @@ import { assert } from "chai";
 export class SimpleStorage implements StorageInterface {
     tasks: Map<string, Task.TaskInterface>;
     idCounter: number;
-    internalTimestamp: number;
 
     constructor() {
         this.tasks = new Map<string, Task.TaskInterface>();
         this.idCounter = 0;
-        this.internalTimestamp = 0;
     }
 
     getTaskById(taskId: string): Promise<Task.TaskInterface> {
