@@ -7,7 +7,7 @@ export class SimpleStorage implements StorageInterface {
     tasks: Map<string, Task.TaskInterface>;
     idCounter: number;
 
-    constructor() {
+    constructor(storageName: string) {
         this.tasks = new Map<string, Task.TaskInterface>();
         this.idCounter = 0;
     }
