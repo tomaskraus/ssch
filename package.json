@@ -3,21 +3,23 @@
   "version": "0.0.1",
   "description": "stateful task scheduler, written in typescript",
   "keywords": [
-    "scheduler", "task", "typescript"
+    "scheduler",
+    "task",
+    "typescript"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "repository": "https://github.com/tomaskraus/ssch",
   "author": "Tomas Kraus",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.0.1",
     "@types/mocha": "^2.2.41",
-
     "mocha": "^3.4.2"
   },
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha ./dist/test"
+    "test": "node node_modules/mocha/bin/mocha ./dist/test",
+    "prepublish": "tsc"
   },
   "dependencies": {
     "debug": "^2.6.8",

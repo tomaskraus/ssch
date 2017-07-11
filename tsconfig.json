@@ -6,7 +6,7 @@
         "sourceMap": true,
         "outDir": "dist",
         "declaration": true,
-        "watch": true
+        "watch": false
     },
     "include": [
         "src/**/*", "test/**/*"
