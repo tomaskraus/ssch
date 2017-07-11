@@ -11,14 +11,23 @@ import * as Mongodb from "mongodb";
 
 export class MongoStorage implements StorageInterface {
 
+    private db: Mongodb.Db;
 
     // TODO: getNewInstance with a Promise returned
 
-    private constructor(uri: string, options?: Mongodb.MongoClientOptions) {
-        debug('CREATING from: [%s]', uri);
-        Mongodb.MongoClient.connect(uri, options)
-            .then((db) => {debug('success [%o]', db);})
-            .catch((reason) => {debug('fail [%o]', reason);})
+    static getNewInstance(uri: string, options?: Mongodb.MongoClientOptions): Promise<MongoStorage> {
+        return Mongodb.MongoClient.connect(uri, options)
+            .then(db => {
+                let newInstance = new MongoStorage(db);
+                debug('success [%o]', db);
+                return Promise.resolve(newInstance);
+            });
+    };
+
+
+    private constructor(db: Mongodb.Db) {
+        this.db = db;
+        debug('instance CREATED');
     }
 
 
