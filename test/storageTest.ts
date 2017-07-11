@@ -14,7 +14,8 @@ let cloneData = function (input) {
 
 describe('Storage', function () {
     beforeEach(function () {
-        sf = new StorageFixture();
+        StorageFixture.getInstance()
+            .then(sfi => { sf = sfi });
     });
 
     describe('#getTaskById', function () {
@@ -51,10 +52,10 @@ describe('Storage', function () {
             TaskHelper.setData(task1m, customData);
 
             return sf.storage.getTaskById(sf.taskId1)
-            .then((task) => { assert.deepEqual(task.data, {}); })
-            .then(() => { sf.storage.updateTask(sf.taskId1, task1m); })
-            .then(() => { return sf.storage.getTaskById(sf.taskId1); })
-            .then((task) => {assert.deepEqual(task.data, customData);})
+                .then((task) => { assert.deepEqual(task.data, {}); })
+                .then(() => { sf.storage.updateTask(sf.taskId1, task1m); })
+                .then(() => { return sf.storage.getTaskById(sf.taskId1); })
+                .then((task) => { assert.deepEqual(task.data, customData); })
         });
 
         it('should throw Error for nonexistent Id to update', function () {
@@ -62,7 +63,7 @@ describe('Storage', function () {
                 return sf.storage.updateTask(sf.nonExistentId, sf.task1).catch((Error) => {
                     assert.include(Error.message, "not found");
                 });
-        });
+            });
         });
     });
 
@@ -70,65 +71,67 @@ describe('Storage', function () {
     describe('#deleteTask()', function () {
         it('deletes a task', function () {
             return sf.storage.getTaskById(sf.taskId1)
-            .then((task) => { assert.deepEqual(task, sf.task1); })
-            .then(() => { sf.storage.deleteTask(sf.taskId1); })
-            .then(() => { return sf.storage.getTaskById(sf.taskId1); })
-            .catch((Error) => {
-                assert.include(Error.message, "not found");
-            });
+                .then((task) => { assert.deepEqual(task, sf.task1); })
+                .then(() => { sf.storage.deleteTask(sf.taskId1); })
+                .then(() => { return sf.storage.getTaskById(sf.taskId1); })
+                .catch((Error) => {
+                    assert.include(Error.message, "not found");
+                });
         });
 
         it('should return Promise Error for nonexistent Id to delete', function () {
             return sf.storage.deleteTask(sf.nonExistentId)
-            .then(() => { throw new Error("task should be non-existent but exists")})
-            .catch((Error) => {
-                assert.include(Error.message, "not found");
-            });
+                .then(() => { throw new Error("task should be non-existent but exists") })
+                .catch((Error) => {
+                    assert.include(Error.message, "not found");
+                });
         });
     });
 
 
-    describe('#getTaskIdsByExecutionTimestamp()', function() {
+    describe('#getTaskIdsByExecutionTimestamp()', function () {
         it("should return Promise Error if minExecTimestamp == maxExecTimestamp", function () {
-           return sf.storage.getTaskPairsByExecutionTimestamp(2, 2)
-           .then(() => { throw new Error("should return Promise Error if minExecTimestamp == maxExecTimestamp")})
-            .catch((Error) => {
-                assert.include(Error.message, "illegal value");
-            });
+            return sf.storage.getTaskPairsByExecutionTimestamp(2, 2)
+                .then(() => { throw new Error("should return Promise Error if minExecTimestamp == maxExecTimestamp") })
+                .catch((Error) => {
+                    assert.include(Error.message, "illegal value");
+                });
         });
         it("should throw error if minExecTimestamp > maxExecTimestamp", function () {
             return sf.storage.getTaskPairsByExecutionTimestamp(3, 2)
-           .then(() => { throw new Error("should throw error if minExecTimestamp > maxExecTimestamp")})
-            .catch((Error) => {
-                assert.include(Error.message, "illegal value");
-            });
+                .then(() => { throw new Error("should throw error if minExecTimestamp > maxExecTimestamp") })
+                .catch((Error) => {
+                    assert.include(Error.message, "illegal value");
+                });
         });
 
-        it("should return an empty array if times are out of range", function() {
+        it("should return an empty array if times are out of range", function () {
             return sf.storage.getTaskPairsByExecutionTimestamp(0, 1)
-            .then(tasks => { assert.deepEqual(tasks, []) });
+                .then(tasks => { assert.deepEqual(tasks, []) });
         });
 
-        it("should return exactly one id for one-point matching timestamp interval", function() {
+        it("should return exactly one id for one-point matching timestamp interval", function () {
             return sf.storage.getTaskPairsByExecutionTimestamp(10, 11)
-            .then(tasks => { assert.deepEqual(tasks, [{execTimestamp: sf.task1.executionTimestamp, taskId: sf.taskId1}]) });
+                .then(tasks => { assert.deepEqual(tasks, [{ execTimestamp: sf.task1.executionTimestamp, taskId: sf.taskId1 }]) });
         });
 
-        it("should return all matching ids for a huge timestamp interval", function() {
+        it("should return all matching ids for a huge timestamp interval", function () {
             return sf.storage.getTaskPairsByExecutionTimestamp(0, 1000)
-            .then(tasks => { assert.deepEqual(tasks, [{execTimestamp: sf.task1.executionTimestamp, taskId: sf.taskId1},
-                {execTimestamp: sf.task2.executionTimestamp, taskId: sf.taskId2}]) });
+                .then(tasks => {
+                    assert.deepEqual(tasks, [{ execTimestamp: sf.task1.executionTimestamp, taskId: sf.taskId1 },
+                    { execTimestamp: sf.task2.executionTimestamp, taskId: sf.taskId2 }])
+                });
         });
 
-        it("should add time intervals correctly", function() {
+        it("should add time intervals correctly", function () {
             let a = sf.storage.getTaskPairsByExecutionTimestamp(0, 10);
             let b = sf.storage.getTaskPairsByExecutionTimestamp(10, 20);
             let c = sf.storage.getTaskPairsByExecutionTimestamp(0, 20);
 
             return Promise.all([a, b, c])
-            .then(values => {
-                assert.deepEqual(values[0].concat(values[1]), values[2]);
-            });
+                .then(values => {
+                    assert.deepEqual(values[0].concat(values[1]), values[2]);
+                });
         });
     });
 });
