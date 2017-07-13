@@ -17,6 +17,10 @@ describe('Scheduler', function () {
 
     });
 
+    afterEach(function () {
+        StorageFixture.destroyInstance().then(() => { return Promise.resolve(); });
+    });
+
     describe('#getFutureTaskIds()', function () {
         it('should resolve to empty taskPair array on early start time and too short future', function () {
             return schf.shortScheduler.getFutureTaskPairs(0).then(pairs => { assert.deepEqual(pairs, []) });

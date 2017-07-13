@@ -46,6 +46,12 @@ class StorageFixture {
             });
         });
     }
+
+
+    static destroyInstance(): Promise<void> {
+        return new Promise((resolve, reject) => { resolve(); });
+    }
+
 }
 
 
