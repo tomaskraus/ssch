@@ -12,6 +12,10 @@ export class SimpleStorage implements StorageInterface {
         this.idCounter = 0;
     }
 
+    close(): Promise<void> {
+        return Promise.resolve();
+    }
+
     getTaskById(taskId: string): Promise<Task.TaskInterface> {
         return new Promise((resolve, reject) => {
             let task = this.tasks.get(taskId);
@@ -36,12 +40,12 @@ export class SimpleStorage implements StorageInterface {
 
     updateTask(taskId: string, task: Task.TaskInterface): Promise<StorageInterface> {
         return this.getTaskById(taskId)
-        .then((taskFound) => {this.tasks.set(taskId, task); return this; })
+            .then((taskFound) => { this.tasks.set(taskId, task); return this; })
     }
 
     deleteTask(taskId: string): Promise<StorageInterface> {
         return this.getTaskById(taskId)
-        .then(() => {
+            .then(() => {
                 this.tasks.delete(taskId);
                 return this;
             });
