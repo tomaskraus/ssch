@@ -19,7 +19,7 @@ export class MongoStorage implements StorageInterface {
         return Mongodb.MongoClient.connect(uri, options)
             .then(db => {
                 let newInstance = new MongoStorage(db);
-                debug('success [%o]', db);
+                debug('connection open: [%o]', db);
                 return Promise.resolve(newInstance);
             });
     };
@@ -30,6 +30,9 @@ export class MongoStorage implements StorageInterface {
         debug('instance CREATED');
     }
 
+    close(): Promise<void> {
+        return this.db.close(true).then(() => { debug('connection CLOSED'); });
+    }
 
     getTaskById(taskId: string): Promise<Task.TaskInterface> {
         throw new Error("Method not implemented.");
