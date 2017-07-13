@@ -15,8 +15,8 @@ let totalRunningTime = 20; //in seconds
 
 // let stor = new SimpleStorage('storageName');
 MongoStorage.getNewInstance('mongodb://localhost:27017/ssch-testapp')
-    .then(storage => { startApp(storage) })
-    .catch(err => { debug("storage initialization failed. reason: [%o]", err); })
+    .then(storage => { startApp(storage); })
+    .catch(err => { debug("Application error. Reason: [%o]", err); })
 
 function startApp(stor) {
     stor.addTask(TaskHelper.create("deleteTask", { a: "1st" }, 1, 0));
