@@ -44,6 +44,7 @@ export class Engine {
     }
 
     stop() {
+        debug("call engine STOP");
         if (this.realTimer != null) {
             this.realTimer.stop();
         }
