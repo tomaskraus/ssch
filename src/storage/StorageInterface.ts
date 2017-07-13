@@ -77,4 +77,15 @@ export interface StorageInterface {
      * @memberof StorageInterface
      */
     getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]>;
+
+
+    /**
+     * deallocates possibly acquired resources
+     * Should be idempotent, i.e. subsequent calls of close should be ok
+     *
+     * @returns {Promise<void>}
+     * @memberof StorageInterface
+     */
+    close(): Promise<void>;
+
 }
