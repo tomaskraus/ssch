@@ -21,7 +21,7 @@ export class MongoStorage implements StorageInterface {
             .then(db => {
                 let newInstance = new MongoStorage(db);
                 debug('connection open: [%o]', db);
-                return Promise.resolve(newInstance);
+                return newInstance;
             });
 
         let b = a.then(stor => {
@@ -32,8 +32,8 @@ export class MongoStorage implements StorageInterface {
         return Promise.all([a, b]).then(values => {
             let store = values[0];
             store.collection = store.db.collection(COLLECTION_NAME);
-            //debug("collection obj: [%o]", store.clt);
-            return Promise.resolve(store);
+            debug("collection obj: [%o]", store.collection);
+            return store;
         });
     };
 
@@ -48,7 +48,14 @@ export class MongoStorage implements StorageInterface {
     }
 
     getTaskById(taskId: string): Promise<Task.TaskInterface> {
-        throw new Error("Method not implemented.");
+        try {
+            return this.collection.findOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) })
+                .then(record => {
+                    return record;
+                })
+        } catch (err) {
+            return Promise.reject(err); //just to promisify unpromisified createFromHexString illegal argument error
+        }
     }
 
     addTask(task: Task.TaskInterface): Promise<string> {
@@ -56,7 +63,7 @@ export class MongoStorage implements StorageInterface {
         return this.collection.insertOne(task)
             .then(writeOpResult => {
                 debug("addTask insertedId result: [%o]", writeOpResult.insertedId);
-                return Promise.resolve(writeOpResult.insertedId.toHexString());
+                return writeOpResult.insertedId.toHexString();
             });
     }
 
