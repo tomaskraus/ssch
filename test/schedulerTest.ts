@@ -10,15 +10,18 @@ describe('Scheduler', function () {
     let sf: StorageFixture;
 
     beforeEach(function () {
-        StorageFixture.getInstance()
-            .then(sfi => {
-                sf = sfi; schf = new SchedulerFixture(sf)
-            });
-
+        console.log("bef.each called");
+        return SchedulerFixture.getInstance()
+            .then(schfi => {
+                schf = schfi;
+                sf = schfi.storageFixture;
+                return schfi;
+            })
     });
 
+
     afterEach(function () {
-        StorageFixture.destroyInstance().then(() => { return Promise.resolve(); });
+        if (sf) return sf.destroy();
     });
 
     describe('#getFutureTaskIds()', function () {
