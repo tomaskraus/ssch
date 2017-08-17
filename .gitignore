@@ -7,4 +7,6 @@ typings
 *.js.map
 *.js
 dist
+.temp
+
 
