@@ -2,6 +2,9 @@ import { StorageInterface, taskPairType } from "./StorageInterface";
 import * as Task from "./../task/Task";
 import { assert } from "chai";
 
+import Debug from 'debug';
+const debug = Debug('ssch:SimpleStorage');
+
 
 export class SimpleStorage implements StorageInterface {
     tasks: Map<string, Task.TaskInterface>;
@@ -68,6 +71,7 @@ export class SimpleStorage implements StorageInterface {
                         ids.push({ execTimestamp: item[1].executionTimestamp, taskId: item[0] });
                     }
                 }
+                //debug(ids);
                 resolve(ids);
             } catch (Error) {
                 reject(Error)
