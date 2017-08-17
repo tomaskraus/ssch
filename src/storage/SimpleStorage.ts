@@ -7,6 +7,10 @@ export class SimpleStorage implements StorageInterface {
     tasks: Map<string, Task.TaskInterface>;
     idCounter: number;
 
+    static getNewInstance(storageName: string): Promise<SimpleStorage> {
+        return Promise.resolve(new SimpleStorage(storageName));
+    }
+
     constructor(storageName: string) {
         this.tasks = new Map<string, Task.TaskInterface>();
         this.idCounter = 0;

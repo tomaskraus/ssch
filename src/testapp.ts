@@ -1,7 +1,7 @@
 
-// import {SimpleStorage} from "./storage/SimpleStorage";
 import { StorageInterface } from "./storage/StorageInterface";
-import { MongoStorage } from "./storage/MongoStorage";
+import {SimpleStorage} from "./storage/SimpleStorage";
+//import { MongoStorage } from "./storage/MongoStorage";
 import { Engine } from "./engine/Engine";
 import * as moment from "moment";
 import { TaskHelper } from "./task/TaskHelper";
@@ -17,8 +17,8 @@ let storage: StorageInterface;
 let engineLoopInterval = 3; //in seconds
 let totalRunningTime = 20; //in seconds
 
-// let stor = new SimpleStorage('storageName');
-MongoStorage.getNewInstance('mongodb://localhost:27017/ssch-testapp')
+SimpleStorage.getNewInstance('storageName')
+//MongoStorage.getNewInstance('mongodb://localhost:27017/ssch-testapp')
     .then(stor => {
         storage = stor;
         eng = new Engine(storage, engineLoopInterval);

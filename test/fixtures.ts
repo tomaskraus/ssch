@@ -13,14 +13,10 @@ let getStorage = function (storageName): Promise<StorageInterface> {
     if (isMongo === true) {
         return MongoStorage.getNewInstance('mongodb://localhost:27017/ssch-testapp')
     } else {
-        return new Promise((resolve, reject) => {
-            let storage = new SimpleStorage(storageName);
-            resolve(storage);
-        });
+        return SimpleStorage.getNewInstance(storageName);
     }
 
 }
-
 
 
 class StorageFixture {
@@ -40,11 +36,11 @@ class StorageFixture {
 
 
     static getInstance(): Promise<StorageFixture> {
-            let a = getStorage('testStorage');
-            let b = getStorage('testStorageEmpty');
-            let sfix: StorageFixture;
+        let a = getStorage('testStorage');
+        let b = getStorage('testStorageEmpty');
+        let sfix: StorageFixture;
 
-            return Promise.all([a, b])
+        return Promise.all([a, b])
             .then((values) => {
                 sfix = new StorageFixture(values[0], values[1]);
                 return sfix;
