@@ -16,7 +16,7 @@ export class MongoStorage implements StorageInterface {
 
     // TODO: getNewInstance with a Promise returned
 
-    static getNewInstance(uri: string, options?: Mongodb.MongoClientOptions): Promise<MongoStorage> {
+    static getNewInstance(uri: string, options?: Mongodb.MongoClientOptions, clearCollectionFlag?: boolean): Promise<MongoStorage> {
         let a = Mongodb.MongoClient.connect(uri, options)
             .then(db => {
                 let newInstance = new MongoStorage(db);
@@ -29,7 +29,14 @@ export class MongoStorage implements StorageInterface {
             return stor.db.createCollection(COLLECTION_NAME)
         });
 
-        return Promise.all([a, b]).then(values => {
+        let c = b.then(coll => {
+            if (clearCollectionFlag) {
+                return coll.remove({});
+            }
+            return coll;
+        })
+
+        return Promise.all([a, b, c]).then(values => {
             let store = values[0];
             store.collection = store.db.collection(COLLECTION_NAME);
             debug("collection obj: [%o]", store.collection);
@@ -76,8 +83,30 @@ export class MongoStorage implements StorageInterface {
     }
 
     getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]> {
-        throw new Error("Method not implemented.");
+        // getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): any {
+        if (minExecutionTimestamp >= maxExecutionTimestamp) {
+            return Promise.reject(new Error("illegal value"));
+        };
+
+        let cursor = this.collection.find({
+            $and: [
+                { executionTimestamp: { $gte: minExecutionTimestamp } },
+                { executionTimestamp: { $lt: maxExecutionTimestamp } }
+            ]
+        });
+        // debug("---------------  cursor= ", cursor);
+        if (cursor) {
+            cursor.toArray()
+                .then(docs => {
+                    debug("* * * * docs= ", docs);
+                    let taskPairTypes: taskPairType[] = [];
+                    for (let tsk of docs) {
+                        taskPairTypes.push({ execTimestamp: tsk.executionTimestamp, taskId: tsk._id.toHexString() })
+                    }
+                    debug("**** tpt= ", taskPairTypes);
+                    return taskPairTypes;
+                });
+        }
+        return Promise.resolve([]);
     }
-
-
 }

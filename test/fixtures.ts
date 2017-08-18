@@ -6,12 +6,12 @@ import { TaskInterface } from '../src/task/Task';
 
 import { Scheduler } from "../src/engine/Scheduler";
 
-let isMongo: boolean = true;
+let isMongo: boolean = false;
 
 
 let getStorage = function (storageName): Promise<StorageInterface> {
     if (isMongo === true) {
-        return MongoStorage.getNewInstance('mongodb://localhost:27017/ssch-testapp')
+        return MongoStorage.getNewInstance(`mongodb://localhost:27017/${storageName}`, null, true)
     } else {
         return SimpleStorage.getNewInstance(storageName);
     }

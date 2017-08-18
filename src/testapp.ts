@@ -18,7 +18,7 @@ let engineLoopInterval = 3; //in seconds
 let totalRunningTime = 20; //in seconds
 
 SimpleStorage.getNewInstance('storageName')
-//MongoStorage.getNewInstance('mongodb://localhost:27017/ssch-testapp')
+//MongoStorage.getNewInstance('mongodb://localhost:27017/ssch-testapp', null, true)
     .then(stor => {
         storage = stor;
         eng = new Engine(storage, engineLoopInterval);
