@@ -6,7 +6,7 @@ import { TaskInterface } from '../src/task/Task';
 
 import { Scheduler } from "../src/engine/Scheduler";
 
-let isMongo: boolean = false;
+let isMongo: boolean = true;
 
 
 let getStorage = function (storageName): Promise<StorageInterface> {
@@ -31,7 +31,7 @@ class StorageFixture {
     private constructor(storage, emptyStorage) {
         this.storage = storage;
         this.emptyStorage = emptyStorage;
-        this.nonExistentId = "nonExistentId";
+        this.nonExistentId = "123412341234123412341234";
     }
 
 

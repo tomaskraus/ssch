@@ -54,32 +54,79 @@ export class MongoStorage implements StorageInterface {
         return this.db.close(true).then(() => { debug('connection CLOSED'); });
     }
 
+    /**
+     *
+     *
+     * @param {string} taskId 24bit hex string
+     * @returns {Promise<Task.TaskInterface>}
+     * @memberof MongoStorage
+     */
     getTaskById(taskId: string): Promise<Task.TaskInterface> {
         try {
             return this.collection.findOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) })
                 .then(record => {
-                    return record;
+                    debug("getTaskById record= ", record);
+                    if (!record) {
+                        throw new Error(`task with id [${taskId}] not found`);
+                    }
+                    return record.task;
                 })
         } catch (err) {
             return Promise.reject(err); //just to promisify unpromisified createFromHexString illegal argument error
         }
     }
 
+    /**
+     *
+     *
+     * @param {Task.TaskInterface} task
+     * @returns {Promise<string>} 24bit hex string
+     * @memberof MongoStorage
+     */
     addTask(task: Task.TaskInterface): Promise<string> {
         debug("addTask begin. task: [%o]", task);
-        return this.collection.insertOne(task)
+        return this.collection.insertOne({ "task": task })
             .then(writeOpResult => {
                 debug("addTask insertedId result: [%o]", writeOpResult.insertedId);
                 return writeOpResult.insertedId.toHexString();
             });
     }
 
+    /**
+     *
+     *
+     * @param {string} taskId 24bit hex string
+     * @param {Task.TaskInterface} task
+     * @returns {Promise<StorageInterface>}
+     * @memberof MongoStorage
+     */
     updateTask(taskId: string, task: Task.TaskInterface): Promise<StorageInterface> {
-        throw new Error("Method not implemented.");
+        return this.collection.updateOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) }, {"task": task})
+            .then(res => {
+                debug("updateOne result= ", res);
+                if (res.result.n == 0) {
+                    throw new Error(`task with id [${taskId}] not found`);
+                }
+                return this;
+            })
     }
 
+    /**
+     *
+     *
+     * @param {string} taskId 24bit hex string
+     * @returns {Promise<StorageInterface>}
+     * @memberof MongoStorage
+     */
     deleteTask(taskId: string): Promise<StorageInterface> {
-        throw new Error("Method not implemented.");
+        return this.collection.deleteOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) })
+            .then(res => {
+                debug("delete result= ", res);
+                if (res.result.n == 0) {
+                    throw new Error(`task with id [${taskId}] not found`);
+                }
+                return this;
+            })
     }
 
     getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]> {
@@ -89,20 +136,20 @@ export class MongoStorage implements StorageInterface {
 
         let cursor = this.collection.find({
             $and: [
-                { executionTimestamp: { $gte: minExecutionTimestamp } },
-                { executionTimestamp: { $lt: maxExecutionTimestamp } }
+                { "task.executionTimestamp": { $gte: minExecutionTimestamp } },
+                { "task.executionTimestamp": { $lt: maxExecutionTimestamp } }
             ]
         });
         return cursor.toArray()
             .then(docs => {
-                //debug("* * * * docs= ", docs);
+                debug("* * * * docs= ", docs);
                 let taskPairTypes: taskPairType[] = [];
                 for (let tsk of docs) {
-                    taskPairTypes.push({ execTimestamp: tsk.executionTimestamp, taskId: tsk._id.toHexString() })
+                    taskPairTypes.push({ execTimestamp: tsk.task.executionTimestamp, taskId: tsk._id.toHexString() })
                 }
                 debug("**** taskPairTypes= ", taskPairTypes);
                 return taskPairTypes;
             });
     }
-}
+
 }
