@@ -20,12 +20,12 @@ export class MongoStorage implements StorageInterface {
         let a = Mongodb.MongoClient.connect(uri, options)
             .then(db => {
                 let newInstance = new MongoStorage(db);
-                debug('connection open: [%o]', db);
+                //debug('connection open: [%o]', db);
                 return newInstance;
             });
 
         let b = a.then(stor => {
-            debug("set to collection: [%s]", COLLECTION_NAME);
+            //debug("set to collection: [%s]", COLLECTION_NAME);
             return stor.db.createCollection(COLLECTION_NAME)
         });
 
@@ -39,7 +39,7 @@ export class MongoStorage implements StorageInterface {
         return Promise.all([a, b, c]).then(values => {
             let store = values[0];
             store.collection = store.db.collection(COLLECTION_NAME);
-            debug("collection obj: [%o]", store.collection);
+            //debug("collection obj: [%o]", store.collection);
             return store;
         });
     };
@@ -83,7 +83,6 @@ export class MongoStorage implements StorageInterface {
     }
 
     getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]> {
-        // getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): any {
         if (minExecutionTimestamp >= maxExecutionTimestamp) {
             return Promise.reject(new Error("illegal value"));
         };
@@ -94,19 +93,16 @@ export class MongoStorage implements StorageInterface {
                 { executionTimestamp: { $lt: maxExecutionTimestamp } }
             ]
         });
-        // debug("---------------  cursor= ", cursor);
-        if (cursor) {
-            cursor.toArray()
-                .then(docs => {
-                    debug("* * * * docs= ", docs);
-                    let taskPairTypes: taskPairType[] = [];
-                    for (let tsk of docs) {
-                        taskPairTypes.push({ execTimestamp: tsk.executionTimestamp, taskId: tsk._id.toHexString() })
-                    }
-                    debug("**** tpt= ", taskPairTypes);
-                    return taskPairTypes;
-                });
-        }
-        return Promise.resolve([]);
+        return cursor.toArray()
+            .then(docs => {
+                //debug("* * * * docs= ", docs);
+                let taskPairTypes: taskPairType[] = [];
+                for (let tsk of docs) {
+                    taskPairTypes.push({ execTimestamp: tsk.executionTimestamp, taskId: tsk._id.toHexString() })
+                }
+                debug("**** taskPairTypes= ", taskPairTypes);
+                return taskPairTypes;
+            });
     }
+}
 }
