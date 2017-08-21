@@ -7,31 +7,16 @@ import * as Task from "./../task/Task";
  */
 export class TaskHelper {
 
-    static create(taskType: Task.TaskType, data: any, executionTimestamp: number, timeCreated: number): Task.TaskInterface {
+    static create(taskType: Task.TaskType, data: object, executionTimestamp: Task.TimestampType, timeCreated: Task.TimestampType): Task.TaskInterface {
         return {
-            taskType: taskType,
-            executionTimestamp: executionTimestamp,
-            data: data,
-            info: {
-                numberOfCalls: 0,
+            meta: {
+                taskType: taskType,
+                executionTimestamp: executionTimestamp,
                 timeCreated: timeCreated,
-                state: Task.TaskState.UNITIALIZED
-            }
+            },
+            data: data,
+            runtime: {}
         }
     }
 
-    static setState(task: Task.TaskInterface, state: Task.TaskState): Task.TaskInterface {
-        task.info.state = state;
-        return task;
-    }
-
-    static setExecutionTimestamp(task: Task.TaskInterface, executionTimestamp: number): Task.TaskInterface {
-        task.executionTimestamp = executionTimestamp;
-        return task;
-    }
-
-    static setData(task: Task.TaskInterface, data: any): Task.TaskInterface {
-        task.data = data;
-        return task;
-    }
 }
