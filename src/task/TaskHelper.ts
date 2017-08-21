@@ -7,7 +7,7 @@ import * as Task from "./../task/Task";
  */
 export class TaskHelper {
 
-    static create(taskType: Task.TaskType, data: object, executionTimestamp: Task.TimestampType, timeCreated: Task.TimestampType): Task.TaskInterface {
+    static create(taskType: Task.TaskType, data: Object, executionTimestamp: Task.TimestampType, timeCreated: Task.TimestampType): Task.TaskInterface {
         return {
             meta: {
                 taskType: taskType,

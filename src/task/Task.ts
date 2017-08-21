@@ -20,8 +20,8 @@ export type TimestampType = number; //unix timestamp
  */
 export interface TaskInterface {
     meta: TaskMetaInterface; //non-volatile meta information
-    data: object; //data
-    runtime: object; //volatile tast-processing info
+    data: Object; //data
+    runtime: Object; //volatile tast-processing info
 }
 
 /**
