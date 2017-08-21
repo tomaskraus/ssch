@@ -1,5 +1,5 @@
-import { TaskInterface } from "../task/Task";
-import { StorageInterface, taskPairType } from "../storage/StorageInterface";
+import { TaskInterface, WrappedTaskInterface } from "../task/Task";
+import { StorageInterface } from "../storage/StorageInterface";
 import { taskDispatcher } from "./TaskDispatcher";
 
 import Debug from 'debug';
@@ -11,7 +11,7 @@ export class Scheduler {
     private storage: StorageInterface;
     private timeFuturePeriod: number; //how long (in seconds) to see to the future when looking for tasks
 
-    private taskIdsToExecute: taskPairType[];
+    private wTasksToExecute: WrappedTaskInterface[];
     private wantToCancelTasks: boolean;
     private plannedTaskTimers: NodeJS.Timer[];
 
@@ -24,23 +24,23 @@ export class Scheduler {
     }
 
 
-    getFutureTaskPairs(timestamp: number): Promise<taskPairType[]> {
-        return this.storage.getTaskPairsByExecutionTimestamp(timestamp, timestamp + this.timeFuturePeriod);
+    getFutureWTasks(timestamp: number): Promise<WrappedTaskInterface[]> {
+        return this.storage.getWrappedTasksByExecutionTimestamp(timestamp, timestamp + this.timeFuturePeriod);
     }
 
 
     doLoop(timestamp: number) {
-        this.getFutureTaskPairs(timestamp)
-        .then(scheduledTaskPairs => {
-            for (let tsk of scheduledTaskPairs) {
-                let timeToWait = tsk.execTimestamp - timestamp;
-                if (!this.wantToCancelTasks) {
-                    this.plannedTaskTimers.push(
-                        global.setTimeout(() => {this.processTaskPair(tsk);}, timeToWait * 1000)
-                    );
-                } else break;
-            }
-        })
+        this.getFutureWTasks(timestamp)
+            .then(scheduledWTasks => {
+                for (let tsk of scheduledWTasks) {
+                    let timeToWait = tsk.task.meta.executionTimestamp - timestamp;
+                    if (!this.wantToCancelTasks) {
+                        this.plannedTaskTimers.push(
+                            global.setTimeout(() => { this.processWTask(tsk); }, timeToWait * 1000)
+                        );
+                    } else break;
+                }
+            })
     }
 
 
@@ -53,22 +53,22 @@ export class Scheduler {
     }
 
 
-    protected processTaskPair(taskPair: taskPairType): void {
+    protected processWTask(wTask: WrappedTaskInterface): Promise<any> {
         try {
-            let taskP: Promise<TaskInterface> = this.storage.getTaskById(taskPair.taskId);
-            taskP.then((task) => {
-                debug("processing task id [%s] taskType [%s]", taskPair.taskId, task.taskType);
-                return taskDispatcher.dispatch(taskPair.taskId, task);
-            })
-            .then((result) => {
-                debug(`task id [${taskPair.taskId}] done`);
-            })
-            .catch((errObj) => {
-                debugError(`task id [${taskPair.taskId}] error: %o`, errObj);
-            });
+            debug("processing task id [%s] taskType [%s]", wTask.id, wTask.task.meta.taskType);
+            return taskDispatcher.dispatch(wTask)
+                .then((result) => {
+                    debug(`task id [${wTask.id}] done`);
+                    return;
+                })
+                .catch((errObj) => {
+                    debugError(`task id [${wTask.id}] error: %o`, errObj);
+                    return;
+                });
         } catch (err) {
             debugError("!! following error was not received in err object, was caught in an exception instead !!");
             debugError(err);
+            return Promise.reject(err);
         }
     }
 

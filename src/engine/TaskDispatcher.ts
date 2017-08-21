@@ -1,4 +1,4 @@
-import { TaskInterface } from "../task/Task";
+import { WrappedTaskInterface } from "../task/Task";
 
 import Debug from 'debug';
 
@@ -18,15 +18,15 @@ export class TaskDispatcher {
      * @returns {Promise}
      * @memberof TaskDispatcher
      */
-    dispatch(taskId: string, task: TaskInterface) {
-        switch (task.taskType) {
+    dispatch(wTask: WrappedTaskInterface) {
+        switch (wTask.task.meta.taskType) {
             case "deleteTask":
-                return deleteTask(taskId, task);
+                return deleteTask(wTask);
             case "longTask":
-                return longTask(taskId, task);
+                return longTask(wTask);
             default:
                 return new Promise((resolve, reject) => {
-                    reject(new Error(`unknown task type [${task.taskType}] for task id [${taskId}]`))
+                    reject(new Error(`unknown task type [${wTask.task.meta.taskType}] for task id [${wTask.id}]`))
                 });
         }
     }
@@ -42,11 +42,9 @@ export { taskDispatcher };
 
 //--------------------------------------------------------------------------------
 
-let deleteTask = function(taskId: string, task: TaskInterface) {
-    debug("task deleteTask called on task id [%s], data: %j", taskId, task.data);
-    return new Promise((resolve, reject) => {
-        resolve("success");
-    });
+let deleteTask = function(wTask: WrappedTaskInterface) {
+    debug("task deleteTask called on task id [%s], data: %j", wTask.id, wTask.task.data);
+    return Promise.resolve("success");
 }
 
 // let longTask0 = function(taskId: string, task: TaskInterface, err: ErrorHandlerType, done: DoneHandlerType) {
@@ -59,18 +57,18 @@ let deleteTask = function(taskId: string, task: TaskInterface) {
 //     done();
 // }
 
-let longTask = function(taskId: string, task: TaskInterface) {
-    debug("task long called, data: %j", task.data);
+
+// TODO refactor
+let longTask = function(wTask: WrappedTaskInterface) {
+    debug("task long called, data: %j", wTask.task.data);
     return new Promise((resolve, reject) => {
         rp({ url: 'http://localhost:8080/github2/longservice/', json: true, timeout: 10000 })
             .then((body) => {
-                debug("task long id [%s] completed: %d", taskId, body && body.val);
+                debug("task long id [%s] completed: %d", wTask.id, body && body.val);
                 resolve("success");
             })
             .catch((error) => {
                 reject(error);
             });
     })
-
-
 }

@@ -1,25 +1,16 @@
-//import { TaskType } from "./TaskType";
 
 //-----------------------------------------------------------------------------------------
 // ADD NEW TASK TYPES HERE
-
 /**
  * type of a task
  */
-export type TaskType =
-    "testTask"
-    | "deleteTask"
-    | "longTask"
-    ;
+export type TaskType = string;
+export type TaskIdType = string; //24bit hex string
+export type TimestampType = number; //unix timestamp
+
 
 //-----------------------------------------------------------------------------------------
 
-/**
- * state of a task
- *
- * @enum {number}
- */
-export enum TaskState { UNITIALIZED, SCHEDULED, IN_PROGRESS, ERROR, TERMINATED }
 
 /**
  *
@@ -28,20 +19,28 @@ export enum TaskState { UNITIALIZED, SCHEDULED, IN_PROGRESS, ERROR, TERMINATED }
  * @interface TaskInterface
  */
 export interface TaskInterface {
-    taskType: TaskType; //type of a task
-    executionTimestamp: number; //when to execute  the task (unix timestamp)
-    data: any; //data
-    info: TaskInfoInterface; //meta information from engine, storage etc.
+    meta: TaskMetaInterface; //non-volatile meta information
+    data: object; //data
+    runtime: object; //volatile tast-processing info
 }
 
 /**
- * task meta information (from engine, storage etc.)
+ * non-volatile task meta information
  *
  * @export
- * @interface TaskInfoInterface
+ * @interface TaskMetaInterface
  */
-export interface TaskInfoInterface {
-    state: TaskState;   //state of a task
-    timeCreated: number; //when the task was created (unix timestamp)
-    numberOfCalls: number; //the number task was called
+export interface TaskMetaInterface {
+    taskType: TaskType; //type of a task
+    executionTimestamp: TimestampType; //when to be executed (unix timestamp)
+    timeCreated: TimestampType; //when the task was created (unix timestamp)
+}
+
+export interface WrappedTaskInterface {
+    id: TaskIdType;
+    task: TaskInterface;
+}
+
+export function hasTaskId(wTask: WrappedTaskInterface): boolean {
+    return (wTask.id !== null);
 }
