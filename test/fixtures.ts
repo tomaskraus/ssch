@@ -2,7 +2,7 @@ import { StorageInterface } from '../src/storage/StorageInterface';
 import { SimpleStorage } from '../src/storage/SimpleStorage';
 import { MongoStorage } from '../src/storage/MongoStorage';
 import { TaskHelper } from '../src/task/TaskHelper';
-import { TaskInterface } from '../src/task/Task';
+import { TaskInterface, WrappedTaskInterface } from '../src/task/Task';
 
 import { Scheduler } from "../src/engine/Scheduler";
 
@@ -24,8 +24,12 @@ class StorageFixture {
     emptyStorage: StorageInterface;
     task1: TaskInterface;
     task2: TaskInterface;
-    taskId1: string;
-    taskId2: string;
+    // taskId1: string;
+    // taskId2: string;
+
+    wTask1: WrappedTaskInterface;
+    wTask2: WrappedTaskInterface;
+
     nonExistentId: string;
 
     private constructor(storage, emptyStorage) {
@@ -47,13 +51,13 @@ class StorageFixture {
             }).then(() => {
                 sfix.task1 = TaskHelper.create("testTask", {}, 10, 0);
                 return sfix.storage.addTask(sfix.task1);
-            }).then(id => {
-                sfix.taskId1 = id;
+            }).then(wTask1 => {
+                sfix.wTask1 = wTask1;
                 // console.log("taskId1=" + sfix.taskId1);
                 sfix.task2 = TaskHelper.create("testTask", {}, 20, 0);
                 return sfix.storage.addTask(sfix.task2);
-            }).then(id => {
-                sfix.taskId2 = id;
+            }).then(wTask2 => {
+                sfix.wTask2 = wTask2;
                 // console.log("taskId2=" + sfix.taskId2);
                 // console.log("hotovo...");
                 return sfix;

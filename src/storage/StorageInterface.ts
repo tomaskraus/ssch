@@ -1,15 +1,5 @@
-import { TaskInterface, TaskInfoInterface, TaskType, TaskState } from "./../task/Task";
+import { TaskInterface, TaskType, TimestampType, TaskIdType, WrappedTaskInterface } from "./../task/Task";
 
-//export const MIN_TIMESTAMP: number = 0;
-//export const MAX_TIMESTAMP: number = Number.MAX_VALUE;
-
-/**
- * task tuple [execTimestamp, id]
- * where:
- *   <li> execTimeStamp is execution time of a task
- *   <li> id is task id in the store
- */
-export type taskPairType = { execTimestamp: number, taskId: string };
 
 /**
  * Storage of tasks
@@ -19,64 +9,63 @@ export type taskPairType = { execTimestamp: number, taskId: string };
  */
 export interface StorageInterface {
 
-
-    /**
-     *
-     *
-     * @param {string} taskId id of a task to search
-     * @returns {Promise<TaskInterface>} resolves with a task with an id given, rejects with an Error
-     *
-     * @memberof StorageInterface
-     */
-    getTaskById(taskId: string): Promise<TaskInterface>;
-
-
     /**
      * Adds a new task to the storage.
      *
      * @param {TaskInterface} task a task to add
-     * @returns {Promise<string>} resolves with an id of the newly added task, rejects with an Error
+     * @returns {Promise<WrappedTaskInterface>} resolves with a new WrappedTask with the id, rejects with an Error
      *
      * @memberof StorageInterface
      */
-    addTask(task: TaskInterface): Promise<string>;
+    addTask(task: TaskInterface): Promise<WrappedTaskInterface>;
+
+    /**
+     *
+     *
+     * @param {TaskIdType} taskId id of a task to search
+     * @returns {Promise<WrappedTaskInterface>} resolves with a WrappedTask with an id given, rejects with an Error
+     *
+     * @memberof StorageInterface
+     */
+    getWrappedTaskById(taskId: TaskIdType): Promise<WrappedTaskInterface>;
+
+
 
     /**
      * Updates task in the storage.
      *
-     * @param {string} taskId id of a task to update
-     * @param {TaskInterface} task task that will replace the original one
+     * @param {WrappedTaskInterface} wTask task that will replace the original one
      * @returns {Promise<StorageInterface>} resolves with a self, rejects with an Error
      *
      * @throws error if no task with that id is found
      *
      * @memberof StorageInterface
      */
-    updateTask(taskId: string, task: TaskInterface): Promise<StorageInterface>;
+    updateTask(wTask: WrappedTaskInterface): Promise<StorageInterface>;
 
     /**
      * deletes a task from the storage.
      *
-     * @param {string} taskId id of a task to delete
+     * @param {TaskIdType} taskId id of a task to delete
      * @returns {Promise<StorageInterface>} resolves with a self, rejects with an Error
      *
      * @throws error if no task with that id is found
      *
      * @memberof StorageInterface
      */
-    deleteTask(taskId: string): Promise<StorageInterface>;
+    deleteTask(taskId: TaskIdType): Promise<StorageInterface>;
 
     /**
      *
      *
-     * @param {number} minExecutionTimestamp timestamp
-     * @param {number} maxExecutionTimestamp timestamp
-     * @returns {Promise<taskPairType[]>} resolves with taskPairs with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp, rejects with an Error
+     * @param {TimestampType} minExecutionTimestamp timestamp
+     * @param {TimestampType} maxExecutionTimestamp timestamp
+     * @returns {Promise<WrappedTaskInterface[]>} resolves with wrappedTasks with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp, rejects with an Error
      *
      *
      * @memberof StorageInterface
      */
-    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]>;
+    getWrappedTasksByExecutionTimestamp(minExecutionTimestamp: TimestampType, maxExecutionTimestamp: TimestampType): Promise<WrappedTaskInterface[]>;
 
 
     /**

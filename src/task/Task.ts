@@ -5,8 +5,8 @@
  * type of a task
  */
 export type TaskType = string;
-
-export type TimestampType = number;
+export type TaskIdType = string; //24bit hex string
+export type TimestampType = number; //unix timestamp
 
 
 //-----------------------------------------------------------------------------------------
@@ -34,4 +34,13 @@ export interface TaskMetaInterface {
     taskType: TaskType; //type of a task
     executionTimestamp: TimestampType; //when to be executed (unix timestamp)
     timeCreated: TimestampType; //when the task was created (unix timestamp)
+}
+
+export interface WrappedTaskInterface {
+    id: TaskIdType;
+    task: TaskInterface;
+}
+
+export function hasTaskId(wTask: WrappedTaskInterface): boolean {
+    return (wTask.id !== null);
 }

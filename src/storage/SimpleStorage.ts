@@ -1,4 +1,4 @@
-import { StorageInterface, taskPairType } from "./StorageInterface";
+import { StorageInterface } from "./StorageInterface";
 import * as Task from "./../task/Task";
 import { assert } from "chai";
 
@@ -7,7 +7,7 @@ const debug = Debug('ssch:SimpleStorage');
 
 
 export class SimpleStorage implements StorageInterface {
-    tasks: Map<string, Task.TaskInterface>;
+    tasks: Map<string, Task.WrappedTaskInterface>;
     idCounter: number;
 
     static getNewInstance(storageName: string): Promise<SimpleStorage> {
@@ -15,7 +15,7 @@ export class SimpleStorage implements StorageInterface {
     }
 
     constructor(storageName: string) {
-        this.tasks = new Map<string, Task.TaskInterface>();
+        this.tasks = new Map<string, Task.WrappedTaskInterface>();
         this.idCounter = 0;
     }
 
@@ -23,35 +23,40 @@ export class SimpleStorage implements StorageInterface {
         return Promise.resolve();
     }
 
-    getTaskById(taskId: string): Promise<Task.TaskInterface> {
+    getWrappedTaskById(taskId: Task.TaskIdType): Promise<Task.WrappedTaskInterface> {
         return new Promise((resolve, reject) => {
-            let task = this.tasks.get(taskId);
-            if (task == null) {
+            let wTask = this.tasks.get(taskId);
+            if (wTask == null) {
                 reject(new Error(`task with id [${taskId}] not found`));
             } else {
-                resolve(task);
+                resolve(wTask);
             }
         })
     }
 
-    addTask(task: Task.TaskInterface): Promise<string> {
+    addTask(task: Task.TaskInterface): Promise<Task.WrappedTaskInterface> {
         return new Promise((resolve, reject) => {
             let id = (this.idCounter++).toString();
-            this.tasks.set(id, task);
-            resolve(id);
+
+            let wtsk = { "id": id, "task": task };
+            this.tasks.set(id, wtsk);
+            resolve(wtsk);
             // if(false) {
             //     reject(new Error("false"));
             // }
         });
     }
 
-    updateTask(taskId: string, task: Task.TaskInterface): Promise<StorageInterface> {
-        return this.getTaskById(taskId)
-            .then((taskFound) => { this.tasks.set(taskId, task); return this; })
+    updateTask(wTask: Task.WrappedTaskInterface): Promise<StorageInterface> {
+        return this.getWrappedTaskById(wTask.id)
+            .then(taskFound => {
+                this.tasks.set(wTask.id, wTask);
+                return this;
+            })
     }
 
-    deleteTask(taskId: string): Promise<StorageInterface> {
-        return this.getTaskById(taskId)
+    deleteTask(taskId: Task.TaskIdType): Promise<StorageInterface> {
+        return this.getWrappedTaskById(taskId)
             .then(() => {
                 this.tasks.delete(taskId);
                 return this;
@@ -59,20 +64,20 @@ export class SimpleStorage implements StorageInterface {
     }
 
 
-    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]> {
+    getWrappedTasksByExecutionTimestamp(minExecutionTimestamp: Task.TimestampType, maxExecutionTimestamp: Task.TimestampType): Promise<Task.WrappedTaskInterface[]> {
         return new Promise((resolve, reject) => {
             try {
                 assert.isBelow(minExecutionTimestamp, maxExecutionTimestamp, "illegal value");
 
-                let ids: taskPairType[] = [];
+                let wTasks: Task.WrappedTaskInterface[] = [];
                 for (var item of this.tasks.entries()) {
-                    if (item[1].executionTimestamp >= minExecutionTimestamp
-                        && item[1].executionTimestamp < maxExecutionTimestamp) {
-                        ids.push({ execTimestamp: item[1].executionTimestamp, taskId: item[0] });
+                    if (item[1].task.meta.executionTimestamp >= minExecutionTimestamp
+                        && item[1].task.meta.executionTimestamp < maxExecutionTimestamp) {
+                        wTasks.push(item[1]);
                     }
                 }
                 //debug(ids);
-                resolve(ids);
+                resolve(wTasks);
             } catch (Error) {
                 reject(Error)
             }

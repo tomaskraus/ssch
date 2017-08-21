@@ -25,31 +25,30 @@ describe('Scheduler', function () {
     });
 
     describe('#getFutureTaskIds()', function () {
-        it('should resolve to empty taskPair array on early start time and too short future', function () {
-            return schf.shortScheduler.getFutureTaskPairs(0).then(pairs => { assert.deepEqual(pairs, []) });
+        it('should resolve to empty WrappedTask array on early start time and too short future', function () {
+            return schf.shortScheduler.getFutureWTasks(0).then(wTasks => { assert.deepEqual(wTasks, []) });
         });
 
-        it('should resolve to one taskPair on a sufficient start time and short future', function () {
-            return schf.shortScheduler.getFutureTaskPairs(1).then(pairs => { assert.deepEqual(pairs, [{ execTimestamp: 10, taskId: sf.taskId1 }]) });
+        it('should resolve to one WrappedTask on a sufficient start time and short future', function () {
+            return schf.shortScheduler.getFutureWTasks(1).then(wTasks => { assert.deepEqual(wTasks, [sf.wTask1]) });
         });
 
-        it('should resolve to one taskPair on on the edge start time', function () {
-            return schf.shortScheduler.getFutureTaskPairs(10).then(pairs => { assert.deepEqual(pairs, [{ execTimestamp: 10, taskId: sf.taskId1 }]) });
+        it('should resolve to one WrappedTask on on the edge start time', function () {
+            return schf.shortScheduler.getFutureWTasks(10).then(wTasks => { assert.deepEqual(wTasks, [sf.wTask1]) });
         });
 
-        it('should return other taskPair on a sufficient start time and short future', function () {
-            return schf.shortScheduler.getFutureTaskPairs(11).then(pairs => { assert.deepEqual(pairs, [{ execTimestamp: 20, taskId: sf.taskId2 }]) });
+        it('should return other WrappedTask on a sufficient start time and short future', function () {
+            return schf.shortScheduler.getFutureWTasks(11).then(wTasks => { assert.deepEqual(wTasks, [sf.wTask2]) });
         });
 
-        it('should return more taskPairs on a sufficient start time and long future', function () {
-            return schf.longScheduler.getFutureTaskPairs(0).then(pairs => {
-                assert.deepEqual(pairs, [{ execTimestamp: 10, taskId: sf.taskId1 },
-                { execTimestamp: 20, taskId: sf.taskId2 }])
+        it('should return more WrappedTasks on a sufficient start time and long future', function () {
+            return schf.longScheduler.getFutureWTasks(0).then(wTasks => {
+                assert.deepEqual(wTasks, [ sf.wTask1, sf.wTask2 ])
             });
         });
 
-        it('should return empty taskPair array on start time at the far future', function () {
-            return schf.shortScheduler.getFutureTaskPairs(30).then(pairs => { assert.deepEqual(pairs, []) });
+        it('should return empty WrappedTask array on start time at the far future', function () {
+            return schf.shortScheduler.getFutureWTasks(30).then(wTasks => { assert.deepEqual(wTasks, []) });
         });
     });
 });

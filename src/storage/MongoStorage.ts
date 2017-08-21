@@ -1,4 +1,4 @@
-import { StorageInterface, taskPairType } from "./StorageInterface";
+import { StorageInterface } from "./StorageInterface";
 import * as Task from "./../task/Task";
 import { assert } from "chai";
 
@@ -57,19 +57,20 @@ export class MongoStorage implements StorageInterface {
     /**
      *
      *
-     * @param {string} taskId 24bit hex string
-     * @returns {Promise<Task.TaskInterface>}
+     * @param {Task.TaskIdType} taskId
+     * @returns {Promise<Task.WrappedTaskInterface>}
      * @memberof MongoStorage
      */
-    getTaskById(taskId: string): Promise<Task.TaskInterface> {
+    getWrappedTaskById(taskId: Task.TaskIdType): Promise<Task.WrappedTaskInterface> {
         try {
             return this.collection.findOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) })
                 .then(record => {
-                    debug("getTaskById record= ", record);
+                    // debug("getWrappedTaskById record= ", record);
                     if (!record) {
                         throw new Error(`task with id [${taskId}] not found`);
                     }
-                    return record.task;
+                    debug("getWrappedTaskById returns= ", {"id": record._id, "task": record.task});
+                    return {"id": record._id.toHexString(), "task": record.task};
                 })
         } catch (err) {
             return Promise.reject(err); //just to promisify unpromisified createFromHexString illegal argument error
@@ -80,32 +81,31 @@ export class MongoStorage implements StorageInterface {
      *
      *
      * @param {Task.TaskInterface} task
-     * @returns {Promise<string>} 24bit hex string
+     * @returns {Promise<WrappedTaskInterface>}
      * @memberof MongoStorage
      */
-    addTask(task: Task.TaskInterface): Promise<string> {
+    addTask(task: Task.TaskInterface): Promise<Task.WrappedTaskInterface> {
         debug("addTask begin. task: [%o]", task);
         return this.collection.insertOne({ "task": task })
             .then(writeOpResult => {
                 debug("addTask insertedId result: [%o]", writeOpResult.insertedId);
-                return writeOpResult.insertedId.toHexString();
+                return {"id": writeOpResult.insertedId.toHexString(), "task": task}; ;
             });
     }
 
     /**
      *
      *
-     * @param {string} taskId 24bit hex string
      * @param {Task.TaskInterface} task
      * @returns {Promise<StorageInterface>}
      * @memberof MongoStorage
      */
-    updateTask(taskId: string, task: Task.TaskInterface): Promise<StorageInterface> {
-        return this.collection.updateOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) }, {"task": task})
+    updateTask(wTask: Task.WrappedTaskInterface): Promise<StorageInterface> {
+        return this.collection.updateOne({ "_id": Mongodb.ObjectID.createFromHexString(wTask.id) }, {"task": wTask.task})
             .then(res => {
                 debug("updateOne result= ", res);
                 if (res.result.n == 0) {
-                    throw new Error(`task with id [${taskId}] not found`);
+                    throw new Error(`task with id [${wTask.id}] not found`);
                 }
                 return this;
             })
@@ -114,14 +114,14 @@ export class MongoStorage implements StorageInterface {
     /**
      *
      *
-     * @param {string} taskId 24bit hex string
+     * @param {Task.TaskIdType} taskId 24bit hex string
      * @returns {Promise<StorageInterface>}
      * @memberof MongoStorage
      */
     deleteTask(taskId: string): Promise<StorageInterface> {
         return this.collection.deleteOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) })
             .then(res => {
-                debug("delete result= ", res);
+                debug("delete result= ", res.result);
                 if (res.result.n == 0) {
                     throw new Error(`task with id [${taskId}] not found`);
                 }
@@ -129,26 +129,26 @@ export class MongoStorage implements StorageInterface {
             })
     }
 
-    getTaskPairsByExecutionTimestamp(minExecutionTimestamp: number, maxExecutionTimestamp: number): Promise<taskPairType[]> {
+    getWrappedTasksByExecutionTimestamp(minExecutionTimestamp: Task.TimestampType, maxExecutionTimestamp: Task.TimestampType): Promise<Task.WrappedTaskInterface[]> {
         if (minExecutionTimestamp >= maxExecutionTimestamp) {
             return Promise.reject(new Error("illegal value"));
         };
 
         let cursor = this.collection.find({
             $and: [
-                { "task.executionTimestamp": { $gte: minExecutionTimestamp } },
-                { "task.executionTimestamp": { $lt: maxExecutionTimestamp } }
+                { "task.meta.executionTimestamp": { $gte: minExecutionTimestamp } },
+                { "task.meta.executionTimestamp": { $lt: maxExecutionTimestamp } }
             ]
         });
         return cursor.toArray()
             .then(docs => {
-                debug("* * * * docs= ", docs);
-                let taskPairTypes: taskPairType[] = [];
+                //debug("* * * * docs= ", docs);
+                let wTasks: Task.WrappedTaskInterface[] = [];
                 for (let tsk of docs) {
-                    taskPairTypes.push({ execTimestamp: tsk.task.executionTimestamp, taskId: tsk._id.toHexString() })
+                    wTasks.push({ id: tsk._id.toHexString(), task: tsk.task })
                 }
-                debug("**** taskPairTypes= ", taskPairTypes);
-                return taskPairTypes;
+                debug("**** getWrappedTasksByExecutionTimestamp wTasks= ", wTasks);
+                return wTasks;
             });
     }
 
