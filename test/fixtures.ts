@@ -1,8 +1,7 @@
 import { StorageInterface } from '../src/storage/StorageInterface';
 import { SimpleStorage } from '../src/storage/SimpleStorage';
 import { MongoStorage } from '../src/storage/MongoStorage';
-import { TaskHelper } from '../src/task/TaskHelper';
-import { TaskInterface, WrappedTaskInterface } from '../src/task/Task';
+import * as Task from '../src/task/Task';
 
 import { Scheduler } from "../src/engine/Scheduler";
 
@@ -22,13 +21,13 @@ let getStorage = function (storageName): Promise<StorageInterface> {
 class StorageFixture {
     storage: StorageInterface;
     emptyStorage: StorageInterface;
-    task1: TaskInterface;
-    task2: TaskInterface;
+    task1: Task.TaskInterface;
+    task2: Task.TaskInterface;
     // taskId1: string;
     // taskId2: string;
 
-    wTask1: WrappedTaskInterface;
-    wTask2: WrappedTaskInterface;
+    wTask1: Task.WrappedTaskInterface;
+    wTask2: Task.WrappedTaskInterface;
 
     nonExistentId: string;
 
@@ -49,12 +48,12 @@ class StorageFixture {
                 sfix = new StorageFixture(values[0], values[1]);
                 return sfix;
             }).then(() => {
-                sfix.task1 = TaskHelper.create("testTask", {}, 10, 0);
+                sfix.task1 = Task.create("testTask", {}, 10, 0);
                 return sfix.storage.addTask(sfix.task1);
             }).then(wTask1 => {
                 sfix.wTask1 = wTask1;
                 // console.log("taskId1=" + sfix.taskId1);
-                sfix.task2 = TaskHelper.create("testTask", {}, 20, 0);
+                sfix.task2 = Task.create("testTask", {}, 20, 0);
                 return sfix.storage.addTask(sfix.task2);
             }).then(wTask2 => {
                 sfix.wTask2 = wTask2;

@@ -44,3 +44,15 @@ export interface WrappedTaskInterface {
 export function hasTaskId(wTask: WrappedTaskInterface): boolean {
     return (wTask.id !== null);
 }
+
+export function create(taskType: TaskType, data: Object, executionTimestamp: TimestampType, timeCreated: TimestampType): TaskInterface {
+    return {
+        meta: {
+            taskType: taskType,
+            executionTimestamp: executionTimestamp,
+            timeCreated: timeCreated,
+        },
+        data: data,
+        runtime: {}
+    }
+}

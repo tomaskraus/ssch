@@ -4,7 +4,7 @@ import { StorageInterface } from "./storage/StorageInterface";
 import { MongoStorage } from "./storage/MongoStorage";
 import { Engine } from "./engine/Engine";
 import * as moment from "moment";
-import { TaskHelper } from "./task/TaskHelper";
+import * as Task from "./task/Task";
 
 import Debug from 'debug';
 const debug = Debug('ssch:testapp');
@@ -41,18 +41,17 @@ function stopApp() {
 
 
 function startApp() {
-    storage.addTask(TaskHelper.create("deleteTask", { a: "1st" }, 1, 0));
-    storage.addTask(TaskHelper.create("deleteTask", {}, 10, 0));
-    storage.addTask(TaskHelper.create("deleteTask", { a: 1 }, 11, 0));
-    storage.addTask(TaskHelper.create("deleteTask", {}, 14, 0));
-    storage.addTask(TaskHelper.create("testTask", {}, 20, 0));
-    storage.addTask(TaskHelper.create("deleteTask", {}, 20, 0));
-    storage.addTask(TaskHelper.create("longTask", {}, 21, 0));
-    storage.addTask(TaskHelper.create("longTask", { t: 23 }, 23, 0));
-    storage.addTask(TaskHelper.create("longTask", {}, 28, 0));
-    storage.addTask(TaskHelper.create("deleteTask", { file: "abc.txt" }, 25, 0));
-    storage.addTask(TaskHelper.create("deleteTask", {}, 53, 0));
-
+    storage.addTask(Task.create("deleteTask", { a: "1st" }, 1, 0));
+    storage.addTask(Task.create("deleteTask", {}, 10, 0));
+    storage.addTask(Task.create("deleteTask", { a: 1 }, 11, 0));
+    storage.addTask(Task.create("deleteTask", {}, 14, 0));
+    storage.addTask(Task.create("testTask", {}, 20, 0));
+    storage.addTask(Task.create("deleteTask", {}, 20, 0));
+    storage.addTask(Task.create("longTask", {}, 21, 0));
+    storage.addTask(Task.create("longTask", { t: 23 }, 23, 0));
+    storage.addTask(Task.create("longTask", {}, 28, 0));
+    storage.addTask(Task.create("deleteTask", { file: "abc.txt" }, 25, 0));
+    storage.addTask(Task.create("deleteTask", {}, 53, 0));
 
 
     let startTime = moment().unix();
@@ -65,5 +64,4 @@ function startApp() {
         debug("it tooks [%d] second(s)", totalTime);
     }, totalRunningTime * 1000);
 }
-
 
