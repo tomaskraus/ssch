@@ -1,57 +1,57 @@
-import { StorageInterface } from "./StorageInterface";
-import * as Task from "./../task/Task";
-import { assert } from "chai";
+import { StorageInterface } from "./StorageInterface"
+import * as Task from "./../task/Task"
+import { assert } from "chai"
 
-import Debug from 'debug';
-const debug = Debug('ssch:MongoStorage');
+import Debug from 'debug'
+const debug = Debug('ssch:MongoStorage')
 
-import * as Mongodb from "mongodb";
+import * as Mongodb from "mongodb"
 
-const COLLECTION_NAME = "tasks";
+const COLLECTION_NAME = "tasks"
 
 export class MongoStorage implements StorageInterface {
 
-    private db: Mongodb.Db;
-    private collection: Mongodb.Collection;
+    private db: Mongodb.Db
+    private collection: Mongodb.Collection
 
     // TODO: getNewInstance with a Promise returned
 
     static getNewInstance(uri: string, options?: Mongodb.MongoClientOptions, clearCollectionFlag?: boolean): Promise<MongoStorage> {
         let a = Mongodb.MongoClient.connect(uri, options)
             .then(db => {
-                let newInstance = new MongoStorage(db);
-                //debug('connection open: [%o]', db);
-                return newInstance;
-            });
+                let newInstance = new MongoStorage(db)
+                //debug('connection open: [%o]', db)
+                return newInstance
+            })
 
         let b = a.then(stor => {
-            //debug("set to collection: [%s]", COLLECTION_NAME);
+            //debug("set to collection: [%s]", COLLECTION_NAME)
             return stor.db.createCollection(COLLECTION_NAME)
-        });
+        })
 
         let c = b.then(coll => {
             if (clearCollectionFlag) {
-                return coll.remove({});
+                return coll.remove({})
             }
-            return coll;
+            return coll
         })
 
         return Promise.all([a, b, c]).then(values => {
-            let store = values[0];
-            store.collection = store.db.collection(COLLECTION_NAME);
-            //debug("collection obj: [%o]", store.collection);
-            return store;
-        });
-    };
+            let store = values[0]
+            store.collection = store.db.collection(COLLECTION_NAME)
+            //debug("collection obj: [%o]", store.collection)
+            return store
+        })
+    }
 
 
     private constructor(db: Mongodb.Db) {
-        this.db = db;
-        debug('instance CREATED');
+        this.db = db
+        debug('instance CREATED')
     }
 
     close(): Promise<void> {
-        return this.db.close(true).then(() => { debug('connection CLOSED'); });
+        return this.db.close(true).then(() => { debug('connection CLOSED')  })
     }
 
     /**
@@ -65,15 +65,15 @@ export class MongoStorage implements StorageInterface {
         try {
             return this.collection.findOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) })
                 .then(record => {
-                    // debug("getWrappedTaskById record= ", record);
+                    // debug("getWrappedTaskById record= ", record)
                     if (!record) {
-                        throw new Error(`task with id [${taskId}] not found`);
+                        throw new Error(`task with id [${taskId}] not found`)
                     }
-                    debug("getWrappedTaskById returns= ", {"id": record._id, "task": record.task});
-                    return {"id": record._id.toHexString(), "task": record.task};
+                    debug("getWrappedTaskById returns= ", {"id": record._id, "task": record.task})
+                    return {"id": record._id.toHexString(), "task": record.task}
                 })
         } catch (err) {
-            return Promise.reject(err); //just to promisify unpromisified createFromHexString illegal argument error
+            return Promise.reject(err)  //just to promisify unpromisified createFromHexString illegal argument error
         }
     }
 
@@ -85,12 +85,12 @@ export class MongoStorage implements StorageInterface {
      * @memberof MongoStorage
      */
     addTask(task: Task.TaskInterface): Promise<Task.WrappedTaskInterface> {
-        debug("addTask begin. task: [%o]", task);
+        debug("addTask begin. task: [%o]", task)
         return this.collection.insertOne({ "task": task })
             .then(writeOpResult => {
-                debug("addTask insertedId result: [%o]", writeOpResult.insertedId);
-                return {"id": writeOpResult.insertedId.toHexString(), "task": task}; ;
-            });
+                debug("addTask insertedId result: [%o]", writeOpResult.insertedId)
+                return {"id": writeOpResult.insertedId.toHexString(), "task": task}
+            })
     }
 
     /**
@@ -103,11 +103,11 @@ export class MongoStorage implements StorageInterface {
     updateTask(wTask: Task.WrappedTaskInterface): Promise<StorageInterface> {
         return this.collection.updateOne({ "_id": Mongodb.ObjectID.createFromHexString(wTask.id) }, {"task": wTask.task})
             .then(res => {
-                debug("updateOne result= ", res);
+                debug("updateOne result= ", res)
                 if (res.result.n == 0) {
-                    throw new Error(`task with id [${wTask.id}] not found`);
+                    throw new Error(`task with id [${wTask.id}] not found`)
                 }
-                return this;
+                return this
             })
     }
 
@@ -121,35 +121,35 @@ export class MongoStorage implements StorageInterface {
     deleteTask(taskId: string): Promise<StorageInterface> {
         return this.collection.deleteOne({ "_id": Mongodb.ObjectID.createFromHexString(taskId) })
             .then(res => {
-                debug("delete result= ", res.result);
+                debug("delete result= ", res.result)
                 if (res.result.n == 0) {
-                    throw new Error(`task with id [${taskId}] not found`);
+                    throw new Error(`task with id [${taskId}] not found`)
                 }
-                return this;
+                return this
             })
     }
 
     getWrappedTasksByExecutionTimestamp(minExecutionTimestamp: Task.TimestampType, maxExecutionTimestamp: Task.TimestampType): Promise<Task.WrappedTaskInterface[]> {
         if (minExecutionTimestamp >= maxExecutionTimestamp) {
-            return Promise.reject(new Error("illegal value"));
-        };
+            return Promise.reject(new Error("illegal value"))
+        }
 
         let cursor = this.collection.find({
             $and: [
                 { "task.meta.executionTimestamp": { $gte: minExecutionTimestamp } },
                 { "task.meta.executionTimestamp": { $lt: maxExecutionTimestamp } }
             ]
-        });
+        })
         return cursor.toArray()
             .then(docs => {
-                //debug("* * * * docs= ", docs);
-                let wTasks: Task.WrappedTaskInterface[] = [];
+                //debug("* * * * docs= ", docs)
+                let wTasks: Task.WrappedTaskInterface[] = []
                 for (let tsk of docs) {
                     wTasks.push({ id: tsk._id.toHexString(), task: tsk.task })
                 }
-                debug("**** getWrappedTasksByExecutionTimestamp wTasks= ", wTasks);
-                return wTasks;
-            });
+                debug("**** getWrappedTasksByExecutionTimestamp wTasks= ", wTasks)
+                return wTasks
+            })
     }
 
 }

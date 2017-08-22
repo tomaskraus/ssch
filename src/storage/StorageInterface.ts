@@ -1,4 +1,4 @@
-import { TaskInterface, TaskType, TimestampType, TaskIdType, WrappedTaskInterface } from "./../task/Task";
+import { TaskInterface, TaskType, TimestampType, TaskIdType, WrappedTaskInterface } from "./../task/Task"
 
 
 /**
@@ -17,7 +17,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    addTask(task: TaskInterface): Promise<WrappedTaskInterface>;
+    addTask(task: TaskInterface): Promise<WrappedTaskInterface>
 
     /**
      *
@@ -27,7 +27,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    getWrappedTaskById(taskId: TaskIdType): Promise<WrappedTaskInterface>;
+    getWrappedTaskById(taskId: TaskIdType): Promise<WrappedTaskInterface>
 
 
 
@@ -41,7 +41,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    updateTask(wTask: WrappedTaskInterface): Promise<StorageInterface>;
+    updateTask(wTask: WrappedTaskInterface): Promise<StorageInterface>
 
     /**
      * deletes a task from the storage.
@@ -53,7 +53,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    deleteTask(taskId: TaskIdType): Promise<StorageInterface>;
+    deleteTask(taskId: TaskIdType): Promise<StorageInterface>
 
     /**
      *
@@ -65,7 +65,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    getWrappedTasksByExecutionTimestamp(minExecutionTimestamp: TimestampType, maxExecutionTimestamp: TimestampType): Promise<WrappedTaskInterface[]>;
+    getWrappedTasksByExecutionTimestamp(minExecutionTimestamp: TimestampType, maxExecutionTimestamp: TimestampType): Promise<WrappedTaskInterface[]>
 
 
     /**
@@ -75,6 +75,6 @@ export interface StorageInterface {
      * @returns {Promise<void>}
      * @memberof StorageInterface
      */
-    close(): Promise<void>;
+    close(): Promise<void>
 
 }
