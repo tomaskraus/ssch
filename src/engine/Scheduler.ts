@@ -46,9 +46,7 @@ export class Scheduler {
     public cancelTasks() {
         debug("cancelTasks CALLED");
         this.wantToCancelTasks = true;
-        for (const taskTimer of this.plannedTaskTimers) {
-            clearTimeout(taskTimer);
-        }
+        this.plannedTaskTimers.forEach((tt) => { clearTimeout(tt); });
     }
 
     protected processWTask(wTask: WrappedTaskInterface): Promise<any> {

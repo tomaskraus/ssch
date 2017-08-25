@@ -69,14 +69,12 @@ export class SimpleStorage implements StorageInterface {
             try {
                 assert.isBelow(minExecutionTimestamp, maxExecutionTimestamp, "illegal value");
 
-                const wTasks: Task.WrappedTaskInterface[] = [];
-                for (const item of this.tasks.entries()) {
-                    if (item[1].task.meta.executionTimestamp >= minExecutionTimestamp
-                        && item[1].task.meta.executionTimestamp < maxExecutionTimestamp) {
-                        wTasks.push(item[1]);
-                    }
-                }
-                // debug(ids)
+                const wTasks = Array.from(this.tasks.entries())
+                    .filter(
+                        ([_, t]) => (t.task.meta.executionTimestamp >= minExecutionTimestamp
+                            && t.task.meta.executionTimestamp < maxExecutionTimestamp),
+                    ).map(([_, t]) => (t));
+
                 resolve(wTasks);
             } catch (Error) {
                 reject(Error);

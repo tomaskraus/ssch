@@ -147,10 +147,7 @@ export class MongoStorage implements StorageInterface {
         return cursor.toArray()
             .then((docs) => {
                 // debug("* * * * docs= ", docs)
-                const wTasks: Task.WrappedTaskInterface[] = [];
-                for (const tsk of docs) {
-                    wTasks.push({ id: tsk._id.toHexString(), task: tsk.task });
-                }
+                const wTasks = Array.from(docs).map( ({ _id, task }) => ({ id: _id.toHexString(), task }) );
                 debug("**** getWrappedTasksByExecutionTimestamp wTasks= ", wTasks);
                 return wTasks;
             });
