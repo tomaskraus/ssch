@@ -16,27 +16,27 @@ export class MongoStorage implements StorageInterface {
         options?: Mongodb.MongoClientOptions,
         clearCollectionFlag?: boolean,
     ): Promise<MongoStorage> {
-        const a = Mongodb.MongoClient.connect(uri, options)
+        const stor = Mongodb.MongoClient.connect(uri, options)
             .then((db) => {
                 const newInstance = new MongoStorage(db);
                 // debug('connection open: [%o]', db)
                 return newInstance;
             });
 
-        const b = a.then((stor) => {
-            // debug("set to collection: [%s]", COLLECTION_NAME)
-            return stor.db.createCollection(COLLECTION_NAME);
-        });
+        const coll = stor
+            .then((s) => {
+                // debug("set to collection: [%s]", COLLECTION_NAME)
+                return s.db.createCollection(COLLECTION_NAME);
+            })
+            .then((clct) => {
+                if (clearCollectionFlag) {
+                    return clct.remove({});
+                }
+                return clct;
+            });
 
-        const c = b.then((coll) => {
-            if (clearCollectionFlag) {
-                return coll.remove({});
-            }
-            return coll;
-        });
-
-        return Promise.all([a, b, c]).then((values) => {
-            const store = values[0];
+        return Promise.all([stor, coll]).then(([storageInstance, _]) => {
+            const store = storageInstance;
             store.collection = store.db.collection(COLLECTION_NAME);
             // debug("collection obj: [%o]", store.collection)
             return store;
@@ -52,7 +52,7 @@ export class MongoStorage implements StorageInterface {
     }
 
     public close(): Promise<void> {
-        return this.db.close(true).then(() => { debug("connection CLOSED");  });
+        return this.db.close(true).then(() => { debug("connection CLOSED"); });
     }
 
     /**
@@ -70,8 +70,8 @@ export class MongoStorage implements StorageInterface {
                     if (!record) {
                         throw new Error(`task with id [${taskId}] not found`);
                     }
-                    debug("getWrappedTaskById returns= ", {id: record._id, task: record.task});
-                    return {id: record._id.toHexString(), task: record.task};
+                    debug("getWrappedTaskById returns= ", { id: record._id, task: record.task });
+                    return { id: record._id.toHexString(), task: record.task };
                 });
         } catch (err) {
             return Promise.reject(err);  // just to promisify unpromisified createFromHexString illegal argument error
@@ -90,7 +90,7 @@ export class MongoStorage implements StorageInterface {
         return this.collection.insertOne({ task })
             .then((writeOpResult) => {
                 debug("addTask insertedId result: [%o]", writeOpResult.insertedId);
-                return {id: writeOpResult.insertedId.toHexString(), task};
+                return { id: writeOpResult.insertedId.toHexString(), task };
             });
     }
 
@@ -102,7 +102,7 @@ export class MongoStorage implements StorageInterface {
      * @memberof MongoStorage
      */
     public updateTask(wTask: Task.WrappedTaskInterface): Promise<StorageInterface> {
-        return this.collection.updateOne({ _id: Mongodb.ObjectID.createFromHexString(wTask.id) }, {task: wTask.task})
+        return this.collection.updateOne({ _id: Mongodb.ObjectID.createFromHexString(wTask.id) }, { task: wTask.task })
             .then((res) => {
                 debug("updateOne result= ", res);
                 if (res.result.n === 0) {
@@ -147,7 +147,7 @@ export class MongoStorage implements StorageInterface {
         return cursor.toArray()
             .then((docs) => {
                 // debug("* * * * docs= ", docs)
-                const wTasks = Array.from(docs).map( ({ _id, task }) => ({ id: _id.toHexString(), task }) );
+                const wTasks = Array.from(docs).map(({ _id, task }) => ({ id: _id.toHexString(), task }));
                 debug("**** getWrappedTasksByExecutionTimestamp wTasks= ", wTasks);
                 return wTasks;
             });

@@ -17,13 +17,13 @@ const getStorage = (storageName): Promise<StorageInterface> => {
 class StorageFixture {
 
     public static getInstance(): Promise<StorageFixture> {
-        const a = getStorage("testStorage");
-        const b = getStorage("testStorageEmpty");
+        const tsp = getStorage("testStorage");
+        const tsep = getStorage("testStorageEmpty");
         let sfix: StorageFixture;
 
-        return Promise.all([a, b])
-            .then((values) => {
-                sfix = new StorageFixture(values[0], values[1]);
+        return Promise.all([tsp, tsep])
+            .then(([tStor, tStorEmpty]) => {
+                sfix = new StorageFixture(tStor, tStorEmpty);
                 return sfix;
             }).then(() => {
                 sfix.task1 = Task.create("testTask", {}, 10, 0);

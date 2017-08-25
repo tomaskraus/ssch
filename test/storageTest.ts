@@ -49,9 +49,9 @@ describe("Storage", () => {
                 const a = sf.storage.getWrappedTaskById(sf.wTask1.id);
                 const b = sf.storage.getWrappedTaskById(sf.wTask2.id);
 
-                return Promise.all([a, b]).then((values) => {
+                return Promise.all([a, b]).then(([t1, t2]) => {
                     // console.log("vals: ", values)
-                    assert.notDeepEqual(values[0], values[1]);
+                    assert.notDeepEqual(t1, t2);
                 });
             });
 
@@ -139,8 +139,8 @@ describe("Storage", () => {
             const c = sf.storage.getWrappedTasksByExecutionTimestamp(0, 20);
 
             return Promise.all([a, b, c])
-                .then((values) => {
-                    assert.deepEqual(values[0].concat(values[1]), values[2]);
+                .then(([t1, t2, tAll]) => {
+                    assert.deepEqual(t1.concat(t2), tAll);
                 });
         });
     });
