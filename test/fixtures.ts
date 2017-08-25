@@ -6,7 +6,7 @@ import * as Task from "../src/task/Task";
 const isMongo: boolean = true;
 
 const getStorage = (storageName): Promise<StorageInterface> => {
-    if (isMongo === true) {
+    if (isMongo) {
         return MongoStorage.getNewInstance(`mongodb://localhost:27017/${storageName}`, null, true);
     } else {
         return SimpleStorage.getNewInstance(storageName);
