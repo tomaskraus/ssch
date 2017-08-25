@@ -1,19 +1,18 @@
-import { StorageInterface } from "../storage/StorageInterface"
-import { SimpleStorage } from "../storage/SimpleStorage"
-import { Scheduler } from "./Scheduler"
+import { SimpleStorage } from "../storage/SimpleStorage";
+import { StorageInterface } from "../storage/StorageInterface";
+import { Scheduler } from "./Scheduler";
 
-import Debug from 'debug'
-const debug = Debug('ssch:Engine')
+import Debug from "debug";
+const debug = Debug("ssch:Engine");
 
-import * as RealTimer from 'real-scheduler'
-
+import * as RealTimer from "real-scheduler";
 
 export class Engine {
-    readonly loopPeriod: number  //in seconds
-    readonly storage: StorageInterface
-    readonly scheduler: Scheduler
+    public readonly loopPeriod: number;  // in seconds
+    public readonly storage: StorageInterface;
+    public readonly scheduler: Scheduler;
 
-    private realTimer: RealTimer | null
+    private realTimer: RealTimer | null;
 
     /**
      * Creates an instance of Engine.
@@ -23,32 +22,32 @@ export class Engine {
      * @memberof Engine
      */
     constructor(storage: StorageInterface, loopPeriod: number) {
-        this.storage = storage
-        this.loopPeriod = loopPeriod
+        this.storage = storage;
+        this.loopPeriod = loopPeriod;
 
-        this.scheduler = new Scheduler(this.storage, loopPeriod)
-        this.realTimer = null
-        debug('CREATED. loopInterval: [%d]', loopPeriod)
+        this.scheduler = new Scheduler(this.storage, loopPeriod);
+        this.realTimer = null;
+        debug("CREATED. loopInterval: [%d]", loopPeriod);
     }
 
-    run(initialTimestamp: number) {
-        debug("call engine START")
+    public run(initialTimestamp: number) {
+        debug("call engine START");
         this.realTimer = new RealTimer((sch) => {
-             debug("-")
-             this.scheduler.doLoop(initialTimestamp + sch.getSyntheticTimeElapsed()/1000)
+             debug("-");
+             this.scheduler.doLoop(initialTimestamp + sch.getSyntheticTimeElapsed() / 1000);
             },
             this.loopPeriod * 1000, {
+                onStop: (sch) => { this.scheduler.cancelTasks(); },
                 waitForTheFirstCall: false,
-                onStop: (sch) => { this.scheduler.cancelTasks()  } }
-        )
+            },
+        );
     }
 
-    stop() {
-        debug("call engine STOP")
+    public stop() {
+        debug("call engine STOP");
         if (this.realTimer != null) {
-            this.realTimer.stop()
+            this.realTimer.stop();
         }
     }
-
 
 }

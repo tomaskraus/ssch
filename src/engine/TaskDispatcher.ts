@@ -1,12 +1,10 @@
-import { WrappedTaskInterface } from "../task/Task"
+import { WrappedTaskInterface } from "../task/Task";
 
-import Debug from 'debug'
+import Debug from "debug";
 
-import * as rp from 'request-promise-native'
+import * as rp from "request-promise-native";
 
-const debug = Debug('ssch:TaskDispatcher')
-
-
+const debug = Debug("ssch:TaskDispatcher");
 
 export class TaskDispatcher {
 
@@ -18,34 +16,30 @@ export class TaskDispatcher {
      * @returns {Promise}
      * @memberof TaskDispatcher
      */
-    dispatch(wTask: WrappedTaskInterface) {
+    public dispatch(wTask: WrappedTaskInterface) {
         switch (wTask.task.meta.taskType) {
             case "deleteTask":
-                return deleteTask(wTask)
+                return deleteTask(wTask);
             case "longTask":
-                return longTask(wTask)
+                return longTask(wTask);
             default:
                 return new Promise((resolve, reject) => {
-                    reject(new Error(`unknown task type [${wTask.task.meta.taskType}] for task id [${wTask.id}]`))
-                })
+                    reject(new Error(`unknown task type [${wTask.task.meta.taskType}] for task id [${wTask.id}]`));
+                });
         }
     }
 
-
 }
 
+const taskDispatcher = new TaskDispatcher();
+export { taskDispatcher };
 
+// --------------------------------------------------------------------------------
 
-let taskDispatcher = new TaskDispatcher()
-export { taskDispatcher }
-
-
-//--------------------------------------------------------------------------------
-
-let deleteTask = function(wTask: WrappedTaskInterface) {
-    debug("task deleteTask called on task id [%s], data: %j", wTask.id, wTask.task.data)
-    return Promise.resolve("success")
-}
+const deleteTask = (wTask: WrappedTaskInterface) => {
+    debug("task deleteTask called on task id [%s], data: %j", wTask.id, wTask.task.data);
+    return Promise.resolve("success");
+};
 
 // let longTask0 = function(taskId: string, task: TaskInterface, err: ErrorHandlerType, done: DoneHandlerType) {
 //     debug("task long called on task id [%s], data: %j", taskId, task.data)
@@ -57,18 +51,17 @@ let deleteTask = function(wTask: WrappedTaskInterface) {
 //     done()
 // }
 
-
 // TODO refactor
-let longTask = function(wTask: WrappedTaskInterface) {
-    debug("task long called, data: %j", wTask.task.data)
+const longTask = (wTask: WrappedTaskInterface) => {
+    debug("task long called, data: %j", wTask.task.data);
     return new Promise((resolve, reject) => {
-        rp({ url: 'http://localhost:8080/github2/longservice/', json: true, timeout: 10000 })
+        rp({ url: "http://localhost:8080/github2/longservice/", json: true, timeout: 10000 })
             .then((body) => {
-                debug("task long id [%s] completed: %d", wTask.id, body && body.val)
-                resolve("success")
+                debug("task long id [%s] completed: %d", wTask.id, body && body.val);
+                resolve("success");
             })
             .catch((error) => {
-                reject(error)
-            })
-    })
-}
+                reject(error);
+            });
+    });
+};

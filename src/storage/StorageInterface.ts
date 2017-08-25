@@ -1,5 +1,4 @@
-import { TaskInterface, TaskType, TimestampType, TaskIdType, WrappedTaskInterface } from "./../task/Task"
-
+import { TaskIdType, TaskInterface, TaskType, TimestampType, WrappedTaskInterface } from "./../task/Task";
 
 /**
  * Storage of tasks
@@ -17,7 +16,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    addTask(task: TaskInterface): Promise<WrappedTaskInterface>
+    addTask(task: TaskInterface): Promise<WrappedTaskInterface>;
 
     /**
      *
@@ -27,9 +26,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    getWrappedTaskById(taskId: TaskIdType): Promise<WrappedTaskInterface>
-
-
+    getWrappedTaskById(taskId: TaskIdType): Promise<WrappedTaskInterface>;
 
     /**
      * Updates task in the storage.
@@ -41,7 +38,7 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    updateTask(wTask: WrappedTaskInterface): Promise<StorageInterface>
+    updateTask(wTask: WrappedTaskInterface): Promise<StorageInterface>;
 
     /**
      * deletes a task from the storage.
@@ -53,20 +50,22 @@ export interface StorageInterface {
      *
      * @memberof StorageInterface
      */
-    deleteTask(taskId: TaskIdType): Promise<StorageInterface>
+    deleteTask(taskId: TaskIdType): Promise<StorageInterface>;
 
     /**
      *
      *
      * @param {TimestampType} minExecutionTimestamp timestamp
      * @param {TimestampType} maxExecutionTimestamp timestamp
-     * @returns {Promise<WrappedTaskInterface[]>} resolves with wrappedTasks with execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp, rejects with an Error
+     * @returns {Promise<WrappedTaskInterface[]>} resolves with wrappedTasks with
+     * execution timestamps >= minExecutionTimestamp and < maxExecutionTimestamp, rejects with an Error
      *
      *
      * @memberof StorageInterface
      */
-    getWrappedTasksByExecutionTimestamp(minExecutionTimestamp: TimestampType, maxExecutionTimestamp: TimestampType): Promise<WrappedTaskInterface[]>
-
+    getWrappedTasksByExecutionTimestamp(
+        minExecutionTimestamp: TimestampType, maxExecutionTimestamp: TimestampType,
+    ): Promise<WrappedTaskInterface[]>;
 
     /**
      * deallocates possibly acquired resources
@@ -75,6 +74,6 @@ export interface StorageInterface {
      * @returns {Promise<void>}
      * @memberof StorageInterface
      */
-    close(): Promise<void>
+    close(): Promise<void>;
 
 }
