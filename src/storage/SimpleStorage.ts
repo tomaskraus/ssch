@@ -25,7 +25,7 @@ export class SimpleStorage implements StorageInterface {
     public getWrappedTaskById(taskId: Task.TaskIdType): Promise<Task.WrappedTaskInterface> {
         return new Promise((resolve, reject) => {
             const wTask = this.tasks.get(taskId);
-            if (wTask == null) {
+            if (wTask === null) {
                 reject(new Error(`task with id [${taskId}] not found`));
             } else {
                 resolve(wTask);
