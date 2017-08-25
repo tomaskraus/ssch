@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import "mocha";
 
-import { StorageFixture } from "./fixtures";
+import { StorageFixture } from "./StorageFixture";
 
 let sf: StorageFixture;
 

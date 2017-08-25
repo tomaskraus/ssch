@@ -1,6 +1,6 @@
 import { Scheduler } from "../src/engine/Scheduler";
 import { StorageInterface } from "../src/storage/StorageInterface";
-import { StorageFixture } from "./fixtures";
+import { StorageFixture } from "./StorageFixture";
 
 class SchedulerFixture {
 

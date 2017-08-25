@@ -1,8 +1,8 @@
 import { assert } from "chai";
 import "mocha";
 
-import { StorageFixture } from "./fixtures";
 import { SchedulerFixture } from "./SchedulerFixture";
+import { StorageFixture } from "./StorageFixture";
 
 describe("Scheduler", () => {
     let schf: SchedulerFixture;
